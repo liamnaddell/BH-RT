@@ -1,3 +1,21 @@
+Marcelo outline:
+
+1. Intro
+- ray tracing
+- BH: Schwarzchild Metric
+- Mathematical Transformations and Approx.
+
+2. Methodology
+- Liam's approach
+- Approxs.
+
+3. Implementations
+
+4. Results and Comparisons
+    - comparison w/close form solutions
+    - wrt/farming 
+
+
 1. Abstract
 2. Introduction
      * Background on the kind of black hole
@@ -108,7 +126,10 @@ in 3 areas:
    the number of points GSL returns, while keeping the distance between points relatively even. (TODO: future work:
    dynamic spacing based off of distortion). The way this challenge was solved was by approximating the angle between
    the black hole on a line of potential future points, as described earlier, and having the GSL driver stencil the
-   equation until the desired 
+   equation until it reaches said line. Idk some closer sentence.
+3. Transfering in/out points is hard
+
+5.2. 
 
 
 credit:
