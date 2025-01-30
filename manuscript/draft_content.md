@@ -46,7 +46,7 @@ MPI, and rendering distinct rays in parallel.
 2. Introduction
 
 The Schwartzschield metric can model black holes which, among other properties, are non-spinning and not charged, 
-meaning their deformation of the trajectories of light rays do not depend on the angle of approach. This paper
+which implies that their deformation of the trajectories of light rays do not depend on the angle of approach. This paper
 (https://phys.au.dk/~fedorov/old/gtr/2018/note9.pdf) Shows how we can derive the equation $$ u'' - u = 3Mu^2 $$, which
 relates the trajectory of a light ray to the mass of a black hole, from the Schwartzschield metric. For this equation,
 "u" represents 1/r, the euclidean distance of a point on the light ray to the black hole center. "u" is differentiated
@@ -127,11 +127,17 @@ in 3 areas:
    dynamic spacing based off of distortion). The way this challenge was solved was by approximating the angle between
    the black hole on a line of potential future points, as described earlier, and having the GSL driver stencil the
    equation until it reaches said line. Idk some closer sentence.
-3. Transfering in/out points is hard
+3. The problem of relating the 2D ray-trajectory equation to a 3D scene has no readily available solutions.
+   As such, it challenges potential students to think deeply about the problem, and to come up with original 
+   solutions.
+
+Beyond the challenges associated with GSL, this project's requirement of parallel image processing 
+
+. Image processing good
+. domain decomposition good
 
 5.2. 
 
 
 credit:
-marcelo (where is appropraite? Mention CSCD71?)
 Ray Tracing in One Weekend
