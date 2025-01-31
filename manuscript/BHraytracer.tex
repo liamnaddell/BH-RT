@@ -13,13 +13,23 @@
 % What I will tell people:
 
 % Motivation... why we are doing this? and why is interesting...
-Raytracing is a foundational technique in Computer Graphics, which can be used to render photorealistic scenes with the proper compute time and algorithms and images of Black Holes, such as M87, have captivated the minds of millions. Since we have well established equations for describing the trajectories of light rays around a black hole, it is natural to try to use a ray tracer to render a scene with this distortion applied.
-% TODO: cite https://arxiv.org/pdf/1906.11238
+Raytracing is a foundational technique in Computer Graphics, which can be used to render photorealistic scenes with the proper compute time and algorithms and images of Black Holes, such as M87 \cite{M87_EHT_i}, have captivated the minds of millions. Since we have well established equations for describing the trajectories of light rays around a black hole, it is natural to try to use a ray tracer to render a scene with this distortion applied.
 
 % TODO: Other work section.
+We should emphasize that there exist a vast variety of implementations
+of raytracers
+\cite{sharma2023mahakalapythonbasedmodularraytracing,James_2015,imbens2023graphicalprocessinggeodesicpropagation}
+and even with direct astrophysical applications such as
+the rendering of blakc hole sorroundings.
+However, our approach seek to highlight some specific features:
+i) its open-source implementation;
+ii) the minimalistic and simplistic technicality, i.e. by tackling
+mostly the actual mathematical problem using specialized libraries
+to solve the governing ODE of the problen;
+iii) the proximity to implement this in a farely efficient and high-performing
+way by employing standards in shared-memory and distributed-memory paradigms;
+and iv) the hardware agnostic approach, i.e. not depending on specialized hardware, accelerators or GPUs which one could argue would be much better suited for tackling this type of problems.
 
-
-Some other work... \cite{sharma2023mahakalapythonbasedmodularraytracing,James_2015,imbens2023graphicalprocessinggeodesicpropagation}
 
 This paper is organized as follows:
 in Sec.~\ref{sec:intro} we present the physical problem of tracing rays of light in the presence of a black hole;
