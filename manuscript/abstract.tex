@@ -5,14 +5,5 @@ In this work we describe the implementation of a parallel open-source code that 
 We do this by combining a couple of different techniques usually present in parallel scientific computing,
 such as, mathematical approximations, utilization of scientific libraries, shared-memory and distributed-memory parallelism.
 
-\CMT{move to intro?}
-The path a light ray takes in orbit of a simple black hole can be modeled by
-the partial differential equation $u'' - u = 3Mu^2$, which relates
-the Euclidean distance and azimuthal angle between the light ray and the black
-hole center, to the mass of the black hole.
-Using GSL and standard raytracing methods, we can trace the path of a light ray
-through 3D space, and determine the interactions that light ray may develop in a 3D scene.
-This comes at the cost of significant computational complexity, which is handled by decomposing
-the problem with MPI, and rendering distinct rays in parallel.
-\TODO{Mention educational section}
-
+%\CMT{move to intro?}
+%The path a light ray takes in orbit of a simple black hole can be modeled by the partial differential equation $u^\prime\prime - u = 3Mu^2$, which relates the euclidean distance and azimuthal angle between the light ray and the black hole center, to the mass of the black hole. Using GSL and standard raytracing methods, we can trace the path of a light ray through 3D space, and determine the interactions that light ray may develop in a 3D scene. This comes at the cost of significant computational complexity, which is handled by decomposing the problem with MPI, and rendering distinct rays in parallel. TODO: Mention educational section
