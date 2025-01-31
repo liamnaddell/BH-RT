@@ -74,22 +74,66 @@ To compute the next point on a light ray `epsilon` distance away, we would compu
 As noted earlier though, we cannot use the trajectories of rays in 2D space to render a 3D scene, meaning we need to find a way to find a 1-to-1 relationship between a subset of 3D rays and 2D rays. The solution here was to recognise that we could apply a combination of axis rotations and axis relabling to complete the correlation. If the "origin" of the light ray, and the origin of the black hole are both located on the z=0 axis, as is the case for our 3D scenes, we can rotate our ray around the z axis until the ray's direction vector has incline $ \pi / 2 $ with respect to the black hole origin, meaning the ray has no spherical incline. At this point, the y component of the ray's origin and direction will both be zero, meaning we have reduced our 3D ray to 2D. From here, we can easily convert to spherical coordinates for use with GSL. Since this process is invertible, we have now found a way to use GSL to trace the trajectory of light rays in 3D using an equation of two variables.
 
 \subsection {Image and scene handling}
-As astronomical images can be of quite high resolution, and the effects of gravitational lensing, when viewed against a high quality background image, are more significant, we wanted to ensure our renderer would work well, even in the case of large images. To accommodate this, we allowed for different MPI processes to load different portions of the imagej
+%As astronomical images can be of quite high resolution, and the effects of gravitational lensing, when viewed against a high quality background image, are more significant, we wanted to ensure our renderer would work well, even in the case of large images. To accommodate this, we allowed for different MPI processes to load different portions of the imagej
+Image and scene handling was done both with JPEG and with PPM support. For JPEG support, Boost's GIL (And consequently libjpeg) was used, and for PPM support, a custom parser was written. Both of these parsers rely on loading the entire image into memory, which has the advantage of quick pixel access, at the cost of potentially loading a lot of unused pixel data into memory. For moderately sized images, this is an appropriate tradeoff, however, for very large astronomical images, this could quickly become a problem, especially as the size of an image (Plus whatever memory is needed for rendering) eclipses the available RAM. To deal with this, future implementations could apply a number of techniques:
+1. Refuse to load the image into memory, instead relying on an `fseek+fread` style implementation, which is likely to perform well on SSD storage, but poorly over the network.
+2. Decompose the image, and have each process store a portion in memory, at the cost of having to exchange pixels when a light ray "misses" our portion of the image. This strategy, if poorly optimized, could result in horrible performance, as it's quite difficult to predict the trajectories of an arbitrary light ray in advance, meaning we are likely to miss our loaded portion of the image. This could easily yield a network bottleneck.
+3. Load portions of the image that are relevant to our render only. This is somewhat of a balance of the previous two approaches, at the cost of additional complexity. 
 \subsection {Domain Decomposition}
 
+The essential element of speeding up a problem with MPI is often to attempt to decompose the problem space into subproblems which can be computed on an individual node. In our case, our problem space is the image we are attempting to render. The most simple solution is to decompose along the scanlines, and render distinct scanlines on distinct nodes. In effect, one would attempt to assign a "band" to each process to render against. As a note, care must be taken to make sure that each process gets a relatively even number of rows, as if one simply divides the number of rows by the number of cores, and assigns it to each process, you are often left with a large remainder assigned to a single process that significantly slows down the speed of computation.
+
+The downside of domain decomposition is that we now have separate bands rendered on separate processes. There are two potential variant implementations. One is to have the "child" processes send their rendered data to a single "parent"/"root" node, which outputs a single image. This is quite convenient for testing, as there is no work required to reassemble the image after rendering. The downside of this is that sending uncompressed pixel data across the network could be quite slow if one is rendering a large scene. To fix this, one could have each process write its "band" to a file, and recombine the images into a large scene later. If image output is done in PPM, this recombination is quite simple, and could likely even be done by a couple clever invocations of `cat`, `head`, and `tail`.
 
 \subsection {Use of OpenMP}
+
+In the context of a single band, it is quite easy to use OpenMP to accellerate rendering, as the problem can be decomposed along the individual scanlines. This was quite helpful, as MPI was best used to distribute the problem across nodes, and OpenMP was useful for distributing the problem across cores. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Results}
 \label{sec:results}
 
-\begin{itemize}
-	\item Some rendered images
-    	\item Scaling results after scaling image dimensions, potentially some other scaling analysis 
-      which I previously did for my presentation.
-\end{itemize}
+\subsection {A selection of renders}
+
+This section includes results of images rendered with the raytracer. The background images for these renders were taken from NASA's SVS. With both images, it is easy to see the effects of gravitational lensing, as well as the clear einstein ring. 
+
+
+% TODO: Cite eagle galaxy image.
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\linewidth]{eagle_render}
+  \caption{\TODO{HI}: Franklin Model D roadster. Photograph by Harris \&
+    Ewing, Inc. [Public domain], via Wikimedia
+    Commons. (\url{https://goo.gl/VLCRBB}).}
+    \Description{A woman and a girl in white dresses sit in an open car.}
+    \label{fig:eagle}
+\end{figure}
+
+%TODO: Cite https://svs.gsfc.nasa.gov/4851/ (Was edited to raise the exposure)
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\linewidth]{starry_render}
+  \caption{\TODO{HI}: Franklin Model D roadster. Photograph by Harris \&
+    Ewing, Inc. [Public domain], via Wikimedia
+    Commons. (\url{https://goo.gl/VLCRBB}).}
+    \Description{A woman and a girl in white dresses sit in an open car.}
+    \label{fig:starry}
+\end{figure}
+
+\subsection {Scaling analysis}
+
+With this project, one can attempt to scale along many different axis. You can increase the size of the background image to stress image parsing, you can increase the number of rendered pixels, you can decrease epsilon, yielding to more calls into GSL, or you can increase samples-per-pixel which controls antialiasing. For weak scaling, you can also scale by adding more nodes, or by adding more cores. 
+
+When increasing the size of the background image, this increases the time spent outside the parallel region, as the background image has to be parsed by each process, which is likely to take the same amount of time per node. As such, it does not present significant interest for scaling analysis
+
+Decreasing epsilon is an interesting scaling parameter, as it is responsible for some of the fidelity of a rendered image. The challenge is that it is hard to be sure how decreasing/increasing epsilon will impact the amount of time needed for a GSL call, which makes it an interesting parameter.
+
+We believe though, that the main parameters of interest are number of rendered pixels, and the number of cores used (across both multiple nodes and single nodes). For testing this kind of scaling without increasing the number of pixels in the scene, antialiasing level could be turned up.
+
+%1. 16-core openmp epsilon
+
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
