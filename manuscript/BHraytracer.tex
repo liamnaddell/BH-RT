@@ -29,7 +29,19 @@ iii) the proximity to implement this in a farely efficient and high-performing
 way by employing standards in shared-memory and distributed-memory paradigms;
 and iv) the hardware agnostic approach, i.e. not depending on specialized hardware, accelerators or GPUs which one could argue would be much better suited for tackling this type of problems.
 
-In order to model a simple black hole, we can use the Schwarzchild metric. This models black holes which, among other properties, are non-spinning and not charged, meaning that their deformation of the trajectories of light rays do not depend on the angle of approach. This paper \cite {federov2019notes} \CMT{need a better ref as these are just not refereed notes} Shows how we can derive the equation $ u'' - u = 3Mu^2 $, which relates the trajectory of a light ray to the mass of a black hole, from the Schwartzschield metric. For this equation, "u" represents 1/r, the Euclidean distance of a point on the light ray to the black hole center. "u" is differentiated with respect to $ \phi $, the azimuthal angle between the point and the black hole origin. After providing initial conditions, we are able to use this equation to trace the entire trajectory of the ray with high fidelity. Notably, this equation is modeled in 2d-spherical coordinates, meaning, if we want to use this equation to analyze light rays in 3D space, we need to find a way to find an equivalent ray that our equation models, and use the 2D ray to find the 3D ray's trajectory.
+In order to model a simple black hole, we can use the Schwarzchild metric.
+This models black holes which, among other properties, are non-spinning and not charged,
+meaning that their deformation of the trajectories of light rays do not depend on the angle of approach.
+%\cite{federov2019notes}
+It has been well established \cite{gravitation-mtw} that the equation,
+\begin{equation}
+	u'' - u = 3 M u^2
+\end{equation}
+relates the trajectory of a light ray to the mass of a black hole, from the Schwartzschield metric;
+where $u$ represents $1/r$, the Euclidean distance of a point on the light ray to the black hole center.
+$u$ is differentiated with respect to $\phi$, the azimuthal angle between the point and the black hole origin.
+After providing initial conditions, we are able to use this equation to trace the entire trajectory of the ray with high fidelity.
+Notably, this equation is modeled in 2d-spherical coordinates, meaning, if we want to use this equation to analyze light rays in 3D space, we need to find a way to find an equivalent ray that our equation models, and use the 2D ray to find the 3D ray's trajectory.
 
 \CMT{Boring paragraph?}
 After being able to compute the trajectory of individual rays, we can use these rays to generate a full image using ray tracing. Ray tracers render a simulated scene by casting light rays from a simulated camera, and computing what objects in the scene would be visible to that ray. If a particular camera would produce an image of 1920x1080 pixels, we could build the image that camera would record by casting a light ray through each pixel. Because ray tracing's unit of perception is how simulated light rays interact with a simulated scene, it is a natural choice for simulations which involve the bending or distortion of light.
