@@ -101,6 +101,12 @@ The downside of domain decomposition is that we now have separate bands rendered
 
 In the context of a single band, it is quite easy to use OpenMP to accelerate rendering, as the problem can be decomposed along the individual scanlines. This was quite helpful, as MPI was best used to distribute the problem across nodes, and OpenMP was useful for distributing the problem across cores. 
 
+
+\subsection{Code Availability}
+Out implementation is available in the following GitHub repository
+	\TODO{add repo}
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Results}
@@ -115,9 +121,7 @@ This section includes results of images rendered with the raytracer. The backgro
 \begin{figure}[h]
   \centering
   \includegraphics[width=\linewidth]{eagle_render}
-  \caption{\TODO{HI}: Franklin Model D roadster. Photograph by Harris \&
-    Ewing, Inc. [Public domain], via Wikimedia
-    Commons. (\url{https://goo.gl/VLCRBB}).}
+  \caption{\TODO{HI}: ....}
     \Description{A woman and a girl in white dresses sit in an open car.}
     \label{fig:eagle}
 \end{figure}
@@ -126,12 +130,13 @@ This section includes results of images rendered with the raytracer. The backgro
 \begin{figure}[h]
   \centering
   \includegraphics[width=\linewidth]{starry_render}
-  \caption{\TODO{HI}: Franklin Model D roadster. Photograph by Harris \&
-    Ewing, Inc. [Public domain], via Wikimedia
-    Commons. (\url{https://goo.gl/VLCRBB}).}
+  \caption{\TODO{HI}: ...}
     \Description{A woman and a girl in white dresses sit in an open car.}
     \label{fig:starry}
 \end{figure}
+
+
+
 
 \subsection {Scaling analysis}
 
@@ -143,24 +148,20 @@ Decreasing epsilon is an interesting scaling parameter, as it is responsible for
 
 We believe though, that the main parameters of interest are number of rendered pixels, and the number of cores used (across both multiple nodes and single nodes). For testing this kind of scaling without increasing the number of pixels in the scene, antialiasing level could be turned up.
 
+\TODO{When reporting results for the scaling analysis and profiling, we should mention where the runs where done -- i.e. the Niagara supercomputer \cite{10.1145/3332186.3332195}}
 
 \CMT{Is there a way to make these take up less space}
 \begin{figure*}[h]
   \centering
   \begin{minipage}{0.45\linewidth}
       \includegraphics[width=\linewidth]{omp_weak2.out}
-      \caption{\TODO{HI}: omp weak 2\&
-        Ewing, Inc. [Public domain], via Wikimedia
-        Commons. (\url{https://goo.gl/VLCRBB}).}
-        \Description{Weak scaling analysis relating omp thread count, time required for computation, and image width}
+      \caption{\TODO{HI}: omp weak 2}        \Description{Weak scaling analysis relating omp thread count, time required for computation, and image width}
         \label{fig:omp_weak2}
     \end{minipage}
   \hspace{.05\linewidth}
  \begin{minipage}{0.45\linewidth}
   \includegraphics[width=\linewidth]{mpi_weak2.out}
-  \caption{\TODO{HI}: mpi weak2 \&
-    Ewing, Inc. [Public domain], via Wikimedia
-    Commons. (\url{https://goo.gl/VLCRBB}).}
+ \caption{\TODO{HI}: mpi weak2 }
     \Description{Weak scaling analysis relating mpi process count, time required for computation, and image width}
     \label{fig:mpi_weak2}
     \end{minipage}
