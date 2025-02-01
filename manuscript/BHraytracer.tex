@@ -44,7 +44,7 @@ It has been well established \cite{gravitation-mtw} that the equation,
 	u'' - u = 3 M u^2
 	\label{eq:Sch-light-ray}
 \end{equation}
-relates the trajectory of a light ray to the mass of a black hole, from the Schwarzschild metric;
+relates the trajectory of a light ray to the mass $M$ of a black hole, from the Schwarzschild metric;
 where $u$ represents $1/r$, being $r$ the Euclidean distance of a point on the light ray to the black hole center.
 $u$ is differentiated with respect to $\phi$, the azimuthal angle between the point and the black hole origin.
 \CMT{we may need a diagram here}
@@ -77,7 +77,7 @@ While the fundamental idea of taking a ray tracer and modifying it so that light
 
 
 \subsection {Using GSL for ODE approximation}
-As for how to compute these segments, GSL's suite of ODE approximation tools found significant utility. GSL allows us to define our equations as C functions, and our particular ray by a set of initial conditions. From there, we can use GSL to compute a series of discrete points on the ray governed by a timestep of our choosing. For initial conditions, we need to describe,in 2D spherical coordinates, an initial point on the ray and a single successor point, which was computed using the linear direction, as we are casting rays far from the black hole's influence. As for the timestep (as it is commonly known in the GSL documentation), we allowed program users to control the "epsilon" of the simulation, with lower epsilon values resulting in more accurate trajectories. 
+As for how to compute these segments, GSL's suite \CMT{need citation for GSL} of ODE approximation tools found significant utility. GSL allows us to define our equations as C functions, and our particular ray by a set of initial conditions. From there, we can use GSL to compute a series of discrete points on the ray governed by a timestep of our choosing. For initial conditions, we need to describe,in 2D spherical coordinates, an initial point on the ray and a single successor point, which was computed using the linear direction, as we are casting rays far from the black hole's influence. As for the timestep (as it is commonly known in the GSL documentation), we allowed program users to control the "epsilon" \CMT{this requires a defintion! -- ie what is epsilon} of the simulation, with lower epsilon values resulting in more accurate trajectories. 
 
 
 \subsection {Ensuring even spacing of computed points}
@@ -99,20 +99,20 @@ As noted earlier though, we cannot use the trajectories of rays in 2D space to r
 
 \subsection {Image and scene handling}
 %As astronomical images can be of quite high resolution, and the effects of gravitational lensing, when viewed against a high quality background image, are more significant, we wanted to ensure our renderer would work well, even in the case of large images. To accommodate this, we allowed for different MPI processes to load different portions of the image
-Image and scene handling was done both with JPEG and with PPM support. For JPEG support, Boost's GIL (And consequently libjpeg) was used, and for PPM support, a custom parser was written. Both of these parsers rely on loading the entire image into memory, which has the advantage of quick pixel access, at the cost of potentially loading a lot of unused pixel data into memory. For moderately sized images, this is an appropriate tradeoff, however, for very large astronomical images, this could quickly become a problem, especially as the size of an image (Plus whatever memory is needed for rendering) eclipses the available RAM. To deal with this, future implementations could apply a number of techniques:
+Image and scene handling was done both with JPEG and with PPM support. For JPEG support, Boost's GIL \CMT{this requires a ref} (And consequently libjpeg) was used, and for PPM support, a custom parser was written. Both of these parsers rely on loading the entire image into memory, which has the advantage of quick pixel access, at the cost of potentially loading a lot of unused pixel data into memory. For moderately sized images, this is an appropriate tradeoff, however, for very large astronomical images, this could quickly become a problem, especially as the size of an image (Plus whatever memory is needed for rendering) eclipses the available RAM. To deal with this, future implementations could apply a number of techniques:
 1. Refuse to load the image into memory, instead relying on an `fseek+fread` style implementation, which is likely to perform well on SSD storage, but poorly over the network.
 2. Decompose the image, and have each process store a portion in memory, at the cost of having to exchange pixels when a light ray "misses" our portion of the image. This strategy, if poorly optimized, could result in horrible performance, as it's quite difficult to predict the trajectories of an arbitrary light ray in advance, meaning we are likely to miss our loaded portion of the image. This could easily yield a network bottleneck.
 3. Load portions of the image that are relevant to our render only. This is somewhat of a balance of the previous two approaches, at the cost of additional complexity. 
 
 
 \subsection {Domain Decomposition}
-The essential element of speeding up a problem with MPI is often to attempt to decompose the problem space into subproblems which can be computed on an individual node. In our case, our problem space is the image we are attempting to render. The most simple solution is to decompose along the scanlines, and render distinct scanlines on distinct nodes. In effect, one would attempt to assign a "band" to each process to render against. As a note, care must be taken to make sure that each process gets a relatively even number of rows, as if one simply divides the number of rows by the number of cores, and assigns it to each process, you are often left with a large remainder assigned to a single process that significantly slows down the speed of computation.
+The essential element of speeding up a problem with Message Passing Interface (MPI) \cite{mpi41} is often to attempt to decompose the problem space into subproblems which can be computed on an individual node. In our case, our problem space is the image we are attempting to render. The most simple solution is to decompose along the scanlines, and render distinct scanlines on distinct nodes. In effect, one would attempt to assign a "band" to each process to render against. As a note, care must be taken to make sure that each process gets a relatively even number of rows, as if one simply divides the number of rows by the number of cores, and assigns it to each process, you are often left with a large remainder assigned to a single process that significantly slows down the speed of computation.
 
 The downside of domain decomposition is that we now have separate bands rendered on separate processes. There are two potential variant implementations. One is to have the "child" processes send their rendered data to a single "parent"/"root" node, which outputs a single image. This is quite convenient for testing, as there is no work required to reassemble the image after rendering. The downside of this is that sending uncompressed pixel data across the network could be quite slow if one is rendering a large scene. To fix this, one could have each process write its "band" to a file, and recombine the images into a large scene later. If image output is done in PPM, this recombination is quite simple, and could likely even be done by a couple clever invocations of `cat`, `head`, and `tail`.
 
 
 \subsection {Use of OpenMP}
-In the context of a single band, it is quite easy to use OpenMP to accelerate rendering, as the problem can be decomposed along the individual scanlines. This was quite helpful, as MPI was best used to distribute the problem across nodes, and OpenMP was useful for distributing the problem across cores. 
+In the context of a single band, it is quite easy to use OpenMP \cite{660313_OMP} to accelerate rendering, as the problem can be decomposed along the individual scanlines. This was quite helpful, as MPI was best used to distribute the problem across nodes, and OpenMP was useful for distributing the problem across cores. 
 
 
 \subsection{Code Availability}
@@ -183,7 +183,7 @@ We believe though, that the main parameters of interest are number of rendered p
     \end{minipage}
 \end{figure*}
 
-From this figure, one can see that, at 16 cores and maximum image width, OMP outperforms MPI by around 40 seconds. This is likely explained by the fact that the MPI implementation relies on exchanging pixel data after computations are performed, which is likely to scale poorly with core count. MPI and OMP are significantly more competitive at lower core counts.
+From this figure, one can see that, at 16 cores and maximum image width, OpenMP outperforms MPI by around 40 seconds. This is likely explained by the fact that the MPI implementation relies on exchanging pixel data after computations are performed, which is likely to scale poorly with core count. MPI and OpenMP are significantly more competitive at lower core counts.
 
 
 \CMT{Maybe these can be also done with the same dual layout}
