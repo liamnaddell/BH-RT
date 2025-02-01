@@ -131,8 +131,70 @@ Decreasing epsilon is an interesting scaling parameter, as it is responsible for
 
 We believe though, that the main parameters of interest are number of rendered pixels, and the number of cores used (across both multiple nodes and single nodes). For testing this kind of scaling without increasing the number of pixels in the scene, antialiasing level could be turned up.
 
-%1. 16-core openmp epsilon
 
+\CMT{Is there a way to make these take up less space}
+\begin{figure*}[h]
+  \centering
+  \begin{minipage}{0.45\linewidth}
+      \includegraphics[width=\linewidth]{omp_weak2.out}
+      \caption{\TODO{HI}: omp weak 2\&
+        Ewing, Inc. [Public domain], via Wikimedia
+        Commons. (\url{https://goo.gl/VLCRBB}).}
+        \Description{Weak scaling analysis relating omp thread count, time required for computation, and image width}
+        \label{fig:omp_weak2}
+    \end{minipage}
+  \hspace{.05\linewidth}
+ \begin{minipage}{0.45\linewidth}
+  \includegraphics[width=\linewidth]{mpi_weak2.out}
+  \caption{\TODO{HI}: mpi weak2 \&
+    Ewing, Inc. [Public domain], via Wikimedia
+    Commons. (\url{https://goo.gl/VLCRBB}).}
+    \Description{Weak scaling analysis relating mpi process count, time required for computation, and image width}
+    \label{fig:mpi_weak2}
+    \end{minipage}
+\end{figure*}
+
+From this figure, one can see that, at 16 cores and maximum image width, OMP outperforms MPI by around 40 seconds. This is likely explained by the fact that the MPI implementation relies on exchanging pixel data after computations are performed, which is likely to scale poorly with core count. MPI and OMP are significantly more competative at lower core counts.
+
+
+\CMT{Maybe these can be also done with the same dual layout}
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.75\linewidth]{omp_weak.out}
+  \caption{\TODO{HI}: Franklin Model D roadster. Photograph by Harris \&
+    Ewing, Inc. [Public domain], via Wikimedia
+    Commons. (\url{https://goo.gl/VLCRBB}).}
+    \Description{Weak scaling analysis relating omp thread count, time required for computation, and epsilon value. }
+    \label{fig:omp_weak}
+\end{figure}
+
+\TODO{Are these results legit???}
+
+Interestingly, decreasing epsilon results in less time complexity, before increasing required time sharply. An epsilon value of about 2-3 results in the best performance.
+
+
+\begin{figure*}[h]
+  \centering
+  \begin{minipage}{0.45\linewidth}
+      \includegraphics[width=\linewidth]{mpi_strong.out}
+      \caption{\TODO{HI}: mpi strong\&
+        Ewing, Inc. [Public domain], via Wikimedia
+        Commons. (\url{https://goo.gl/VLCRBB}).}
+        \Description{Weak scaling analysis relating omp thread count, time required for computation, and image width}
+        \label{fig:mpi_strong}
+    \end{minipage}
+  \hspace{.05\linewidth}
+ \begin{minipage}{0.45\linewidth}
+  \includegraphics[width=\linewidth]{omp_strong.out}
+  \caption{\TODO{HI}: omp strong \&
+    Ewing, Inc. [Public domain], via Wikimedia
+    Commons. (\url{https://goo.gl/VLCRBB}).}
+    \Description{Weak scaling analysis relating mpi process count, time required for computation, and image width}
+    \label{fig:omp_strong}
+    \end{minipage}
+\end{figure*}
+
+\CMT{I will fix the fact that I outperformed the ideal, thats bogus}
 
 
 
@@ -163,7 +225,14 @@ Finally, this project provides an opportunity to practice domain decomposition t
 One interesting aspect of this design is it's general applicability. Variations of this technique can be used to render any sort of image under light distortion specified by a differential equation. In effect, any distortion function could be input into the ray tracer, and an image modeled under that distortion could be output. In the same line, this technique could be used to render images under the Kerr metric.
 % TODO: Forgetting what else is good to put here...
 \subsection {Performance Tuning}
-\subsection {A better ray tracer (Also accretion disks)}
+
+There is plenty of room for optimization on top of this ray tracer. A good place to start is that we could get away with calling into GSL significantly fewer times. When the light ray is far from the black hole, we can assume that the distortion is near zero, and thus, that we can simply compute the ray trajectory using euclidean geometry. With certain settings, approximately 50\% of the ray tracer's runtime is spent inside GSL. Most of this time could be eliminated, resulting in much better performance. 
+
+%\subsection {A better ray tracer}
+%This section could discuss possible improvements made to the ray tracer to get better images, more features, etcs
+
+%\subsection {Multiple black holes}
+%Can discuss attempting to trace multiple black holes in the same image.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
