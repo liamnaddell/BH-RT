@@ -87,7 +87,7 @@ As for how to compute these segments, the GNU Scientific Library's (GSL) suite \
 To compute the next point on a light ray `epsilon` distance away, we would compute, using the Euclidean metric, the light ray's path with no distortion. In spherical coordinates, this allows us to compute the azimuthal angle from the black hole's origin. We can feed this updated azimuthal angle into GSL, and it will return the distance of the ray from the origin of the black hole. In effect, GSL behaves as a function from azimuthal angle to distance, allowing us to compute the needed points in 2D space. See ~\ref{fig:one} for an example of how these paths are computed.   \TODO{Is there a better way to explain this?}
 \begin{figure}[h]
   \centering
-  \includegraphics[width=.65\linewidth]{nextpoint}
+  \includegraphics[width=.65\linewidth]{figs/nextpoint}
   \caption{\TODO{HI}: Franklin Model D roadster. Photograph by Harris \&
     Ewing, Inc. [Public domain], via Wikimedia Commons. (\url{https://goo.gl/VLCRBB}).
 	\TODO{We need a much better figure here!}}
@@ -140,7 +140,7 @@ This section includes results of images rendered with the raytracer. The backgro
 % TODO: Cite eagle galaxy image.
 \begin{figure}[h]
   \centering
-  \includegraphics[width=0.8\linewidth]{eagle_render}
+  \includegraphics[width=0.8\linewidth]{figs/eagle_render}
   \caption{\TODO{HI}: ....}
     \Description{A woman and a girl in white dresses sit in an open car.}
     \label{fig:eagle}
@@ -149,7 +149,7 @@ This section includes results of images rendered with the raytracer. The backgro
 %TODO: Cite https://svs.gsfc.nasa.gov/4851/ (Was edited to raise the exposure)
 \begin{figure}[h]
   \centering
-  \includegraphics[width=\linewidth]{starry_render}
+  \includegraphics[width=\linewidth]{figs/starry_render}
   \caption{\TODO{HI}: ...}
     \Description{A woman and a girl in white dresses sit in an open car.}
     \label{fig:starry}
@@ -173,19 +173,19 @@ We believe though, that the main parameters of interest are number of rendered p
 \begin{figure*}[h]
   \centering
   \begin{minipage}{0.45\linewidth}
-      \includegraphics[width=\linewidth]{omp_weak2.out}
+      \includegraphics[width=\linewidth]{figs/omp_weak2.out}
       \caption{\TODO{HI}: omp weak 2}        \Description{Weak scaling analysis relating omp thread count, time required for computation, and image width}
         \label{fig:omp_weak2}
     \end{minipage}
   \hspace{.05\linewidth}
  \begin{minipage}{0.45\linewidth}
-  \includegraphics[width=\linewidth]{mpi_weak2.out}
+  \includegraphics[width=\linewidth]{figs/mpi_weak2.out}
  \caption{\TODO{HI}: mpi weak2 }
     \Description{Weak scaling analysis relating mpi process count, time required for computation, and image width}
     \label{fig:mpi_weak2}
     \end{minipage}
   \begin{minipage}{0.45\linewidth}
-      \includegraphics[width=\linewidth]{mpi_strong.out}
+      \includegraphics[width=\linewidth]{figs/mpi_strong.out}
       \caption{\TODO{HI}: mpi strong\&
         Ewing, Inc. [Public domain], via Wikimedia
         Commons. (\url{https://goo.gl/VLCRBB}).}
@@ -194,7 +194,7 @@ We believe though, that the main parameters of interest are number of rendered p
     \end{minipage}
   \hspace{.05\linewidth}
  \begin{minipage}{0.45\linewidth}
-  \includegraphics[width=\linewidth]{omp_strong.out}
+  \includegraphics[width=\linewidth]{figs/omp_strong.out}
   \caption{\TODO{HI}: omp strong \&
     Ewing, Inc. [Public domain], via Wikimedia
     Commons. (\url{https://goo.gl/VLCRBB}).}
@@ -211,7 +211,7 @@ From Figures ~\ref{fig:omp_weak2} and ~\ref{fig:mpi_weak2}, one can see that, at
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=0.55\linewidth]{omp_weak.out}
+  \includegraphics[width=0.55\linewidth]{figs/omp_weak.out}
   \caption{\TODO{HI}: Franklin Model D roadster. Photograph by Harris \&
     Ewing, Inc. [Public domain], via Wikimedia
     Commons. (\url{https://goo.gl/VLCRBB}).}
