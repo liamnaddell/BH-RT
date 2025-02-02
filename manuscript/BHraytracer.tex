@@ -25,6 +25,7 @@ in rendering of movies, animations, and even up to more excotic images of Black 
 such as te ones remarkably done for the BH reciding at the center of the galaxy M87 \cite{M87_EHT_i},
 which have captivated the minds of millions.
 Since we have well established the theory and equations for describing the trajectories of light rays around a black hole, it is natural to try to use a ray tracer to render a scene within this geometry which ultimately results in a particular distortion applied to the general techniques.
+%Raytracing is a foundational technique in Computer Graphics, which can be used to render photorealistic scenes with the proper compute time, and images of Black Holes, such as M87 \cite{M87_EHT_i}, have captivated the minds of millions. Since we have well established equations for describing the trajectories of light rays around a black hole, it is natural to try to use a ray tracer to render a scene with this distortion applied.
 
 We should emphasize that there exist a large variety of raytracers implementations already 
 \cite{sharma2023mahakalapythonbasedmodularraytracing,imbens2023graphicalprocessinggeodesicpropagation,10.2312:vmv.20221208,10.2312/EGPGV/EGPGV12/051-060,7539599_OSPRay,James_2015}
@@ -54,7 +55,6 @@ $u$ is differentiated with respect to $\phi$, the azimuthal angle between the po
 After providing initial conditions,  it is possible to solve Eq.(\ref{eq:Sch-light-ray}) and trace the entire trajectory of the ray with high fidelity.
 Notably, this equation is modeled in 2d-spherical coordinates, meaning, if we want to use this equation to analyze light rays in 3D space, we need to find a way to find an equivalent ray that our equation models, and use the 2D ray to find the 3D ray's trajectory.
 
-\CMT{Boring paragraph?}\CMT{mp: why? I think is good!}
 After being able to compute the trajectory of individual rays, we can use these rays to generate a full image using ray tracing. Ray tracers render a simulated scene by casting light rays from a simulated camera, and computing what objects in the scene would be visible to that ray. If a particular camera would produce an image of let's say $1920 \times 1080$ pixels, we could build the image that camera would record by casting a light ray through each pixel. Because ray tracing's unit of perception is how simulated light rays interact with a simulated scene, it is a natural choice for simulations which involve the bending or distortion of light.
 
 \CMT{Some discussion of other papers can be made here}
@@ -67,6 +67,7 @@ in Sec.~\ref{sec:results} we discuss our results and compare to other related wo
 and finally in Sec.~\ref{sec:disc} and ~\ref{sec:concl} we present our findings and comment
 on possible future extensions to this work.
 
+Having given an introduction in Sec.~\ref{sec:intro} to the problem, we will proceed in Sec.~\ref{sec:impl} to describe our implementation approach, followed by results in  Sec.~\ref{sec:results} and a discussion in Sec.~\ref{sec:disc} and ~\ref{sec:concl}.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -80,8 +81,7 @@ While the fundamental idea of taking a ray tracer and modifying it so that light
 
 
 \subsection{Using GSL for ODE approximation}
-As for how to compute these segments, the GNU Scientific Library's (GSL) suite \cite{10.5555/1538674} of ODE approximation tools found significant utility. GSL allows us to define our equations as C functions, and our particular ray by a set of initial conditions. From there, we can use GSL to compute a series of discrete points on the ray governed by a timestep of our choosing. For initial conditions, we need to describe,in 2D spherical coordinates, an initial point on the ray and a single successor point, which was computed using the linear direction, as we are casting rays far from the black hole's influence. As for the timestep (as it is commonly known in the GSL documentation), we allowed program users to control the "epsilon" \CMT{this requires a defintion! -- ie what is epsilon} of the simulation, with lower epsilon values resulting in more accurate trajectories. 
-
+As for how to compute these segments, the GNU Scientific Library's (GSL) suite \cite{10.5555/1538674} of ODE approximation tools found significant utility. GSL allows us to define our equations as C functions, and our particular ray by a set of initial conditions. From there, we can use GSL to compute a series of discrete points on the ray governed by a timestep of our choosing. For initial conditions, we need to describe,in 2D spherical coordinates, an initial point on the ray and a single successor point, which was computed using the linear direction, as we are casting rays far from the black hole's influence. As for the timestep (as it is commonly known in the GSL documentation), we allowed program users to control the "epsilon" \CMT{this requires a defintion! -- ie what is epsilon} of the simulation, with lower epsilon values resulting in more accurate trajectories, but also requiring more computed points. 
 
 \subsection{Ensuring even spacing of computed points}
 To compute the next point on a light ray `epsilon` distance away, we would compute, using the Euclidean metric, the light ray's path with no distortion. In spherical coordinates, this allows us to compute the azimuthal angle from the black hole's origin. We can feed this updated azimuthal angle into GSL, and it will return the distance of the ray from the origin of the black hole. In effect, GSL behaves as a function from azimuthal angle to distance, allowing us to compute the needed points in 2D space. See ~\ref{fig:one} for an example of how these paths are computed.   \TODO{Is there a better way to explain this?}
@@ -115,7 +115,8 @@ The downside of domain decomposition is that we now have separate bands rendered
 
 
 \subsection{Use of OpenMP}
-In the context of a single band, it is quite easy to use OpenMP \cite{660313_OMP} to accelerate rendering, as the problem can be decomposed along the individual scanlines. This was quite helpful, as MPI was best used to distribute the problem across nodes, and OpenMP was useful for distributing the problem across cores. 
+In the context of a single band, it is quite easy to use OpenMP \cite{660313_OMP} to accellerate rendering, as the problem can be decomposed along the individual scanlines. This was quite helpful, as MPI was best used to distribute the problem across nodes, and OpenMP was useful for distributing the problem across cores.
+Additionally, as shown in Sec.~\ref{sec:results}, OpenMP threads scale significantly better than MPI processes, meaning we would like to take advantage of the increased performance wherever possible.
 
 
 \subsection{Code Availability}
@@ -139,7 +140,7 @@ This section includes results of images rendered with the raytracer. The backgro
 % TODO: Cite eagle galaxy image.
 \begin{figure}[h]
   \centering
-  \includegraphics[width=\linewidth]{eagle_render}
+  \includegraphics[width=0.8\linewidth]{eagle_render}
   \caption{\TODO{HI}: ....}
     \Description{A woman and a girl in white dresses sit in an open car.}
     \label{fig:eagle}
@@ -161,7 +162,7 @@ This section includes results of images rendered with the raytracer. The backgro
 
 With this project, one can attempt to scale along many different axis. You can increase the size of the background image to stress image parsing, you can increase the number of rendered pixels, you can decrease epsilon, yielding to more calls into GSL, or you can increase samples-per-pixel which controls antialiasing. For weak scaling, you can also scale by adding more nodes, or by adding more cores. 
 
-When increasing the size of the background image, this increases the time spent outside the parallel region, as the background image has to be parsed by each process, which is likely to take the same amount of time per node. As such, it does not present significant interest for scaling analysis
+When increasing the size of the background image, this increases the time spent outside the parallel region, as the background image has to be parsed by each process, which is likely to take the same amount of time per node. As such, it does not present significant interest for scaling analysis.
 
 Decreasing epsilon is an interesting scaling parameter, as it is responsible for some of the fidelity of a rendered image. The challenge is that it is hard to be sure how decreasing/increasing epsilon will impact the amount of time needed for a GSL call, which makes it an interesting parameter.
 
@@ -169,7 +170,6 @@ We believe though, that the main parameters of interest are number of rendered p
 
 \TODO{When reporting results for the scaling analysis and profiling, we should mention where the runs where done -- i.e. the Niagara supercomputer \cite{10.1145/3332186.3332195}}
 
-\CMT{Is there a way to make these take up less space}
 \begin{figure*}[h]
   \centering
   \begin{minipage}{0.45\linewidth}
@@ -184,29 +184,6 @@ We believe though, that the main parameters of interest are number of rendered p
     \Description{Weak scaling analysis relating mpi process count, time required for computation, and image width}
     \label{fig:mpi_weak2}
     \end{minipage}
-\end{figure*}
-
-From this figure, one can see that, at 16 cores and maximum image width, OpenMP outperforms MPI by around 40 seconds. This is likely explained by the fact that the MPI implementation relies on exchanging pixel data after computations are performed, which is likely to scale poorly with core count. MPI and OpenMP are significantly more competitive at lower core counts.
-
-
-\CMT{Maybe these can be also done with the same dual layout}
-\begin{figure}[h]
-  \centering
-  \includegraphics[width=0.75\linewidth]{omp_weak.out}
-  \caption{\TODO{HI}: Franklin Model D roadster. Photograph by Harris \&
-    Ewing, Inc. [Public domain], via Wikimedia
-    Commons. (\url{https://goo.gl/VLCRBB}).}
-    \Description{Weak scaling analysis relating omp thread count, time required for computation, and epsilon value. }
-    \label{fig:omp_weak}
-\end{figure}
-
-\TODO{Are these results legit???}
-
-Interestingly, decreasing epsilon results in less time complexity, before increasing required time sharply. An epsilon value of about 2-3 results in the best performance.
-
-
-\begin{figure*}[h]
-  \centering
   \begin{minipage}{0.45\linewidth}
       \includegraphics[width=\linewidth]{mpi_strong.out}
       \caption{\TODO{HI}: mpi strong\&
@@ -226,8 +203,28 @@ Interestingly, decreasing epsilon results in less time complexity, before increa
     \end{minipage}
 \end{figure*}
 
-\CMT{I will fix the fact that I outperformed the ideal, thats bogus}
+From this figure, one can see that, at 16 cores and maximum image width, OpenMP outperforms MPI by around 40 seconds. This is likely explained by the fact that the MPI implementation relies on exchanging pixel data after computations are performed, which is likely to scale poorly with core count. MPI and OpenMP are significantly more competitive at lower core counts.
 
+
+From Figures ~\ref{fig:omp_weak2} and ~\ref{fig:mpi_weak2}, one can see that, at 16 cores and maximum image width, OMP outperforms MPI by around 20 seconds. This is likely explained by the fact that the MPI implementation relies on exchanging pixel data after computations are performed, which is likely to scale poorly with core count. MPI and OMP are significantly more competative at lower core counts.
+
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.55\linewidth]{omp_weak.out}
+  \caption{\TODO{HI}: Franklin Model D roadster. Photograph by Harris \&
+    Ewing, Inc. [Public domain], via Wikimedia
+    Commons. (\url{https://goo.gl/VLCRBB}).}
+    \Description{Weak scaling analysis relating omp thread count, time required for computation, and epsilon value. }
+    \label{fig:omp_weak}
+\end{figure}
+
+\TODO{Are these results legit???}
+
+Interestingly, as observed by Figure ~\ref{fig:omp_weak} decreasing epsilon results in less time complexity, before increasing required time sharply. An epsilon value of about 2-3 results in the best performance.
+
+
+\CMT{I will fix the fact that I outperformed the ideal, thats bogus}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
