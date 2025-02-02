@@ -16,34 +16,32 @@
 Raytracing is a foundational technique in computer graphics, which can be used
 to render photorealistic scenes.
 A good introduction to the main techniques and practical implementations can be found
-in this Ref.\cite{raytracing_in_one_weekend}.
-\CMT{maybe describe the basics in 2 or 3 sentences...}
+in Ref.\cite{raytracing_in_one_weekend}.
+\CMT{maybe describe the basics in 2 or 3 sentences... Liam: Some basics are covered in the "After being able to compute the trajectory" paragraph}
 In general this implies expensive proccesses and requires the corresponding aproppiate compute time
 as well as complex and sophisticated algorithms.
-Their applications range from, generation of high-quality realistic visualizations
-in rendering of movies, animations, and even up to more exhotic images of black holes,
-such as te ones remarkably done for black hole reciding at the center of the galaxy M87 \cite{M87_EHT_i}
-and the supermassive black hole Sagittarius A* at the center of our own galaxy \cite{SagA_EHT_i},
-which have captivated the minds and interest of millions.
+Their applications range from generation of high-quality realistic visualizations to
+rendering of movies or animations, and up to even more exotic images of black holes,
+such as the ones remarkably done for black hole reciding at the center of the galaxy M87 \cite{M87_EHT_i}
+and the supermassive black hole Sagittarius A* at the center of our own galaxy \cite{SagA_EHT_i}. Images like these have captivated the minds and interest of millions. \CMT{Liam: This couple of sentences seem to imply that Sagittarius A* and M87 were ray traced images...}
 Since we have well established the theory and equations for describing the trajectories of light rays around a black hole, it is natural to try to use a ray tracer to render a scene within this geometry which ultimately results in a particular distortion applied to the general techniques.
 
-We should emphasize that there exist a large variety of raytracers implementations already 
+We should emphasize that there exist a large variety of raytracer implementations already 
 \cite{imbens2023graphicalprocessinggeodesicpropagation,10.2312/EGPGV/EGPGV12/051-060,7539599_OSPRay}
 and even with direct astrophysical applications such as the rendering of black hole surroundings
 \cite{10.2312:vmv.20221208,sharma2023mahakalapythonbasedmodularraytracing,James_2015}.
-However, our approach seek to highlight some specific features:
+However, our approach seeks to highlight some specific features:
 i) its open-source implementation;
-ii) the minimalistic and simplistic technicality, i.e. by tackling
+ii) the minimalistic and simplistic implementation strategy, i.e. by tackling
 mostly the actual mathematical problem using specialized libraries
 to solve the governing differential equation of the problem;
-iii) the proximity to implement this in a farely efficient and high-performing
+iii) the proximity \CMT{Liam: I'm not sure what is meant by this?} to implement this in a farely efficient and high-performing
 way by employing standards in shared-memory and distributed-memory paradigms;
 and iv) the hardware agnostic approach, i.e. not depending on specialized hardware, accelerators or GPUs which one could argue would be much better suited for tackling this type of problems.
 
 In order to model a simple black hole scenario, we can use the Schwarzschild metric \cite{schw_soln-2007}.
 This models black holes which, among other properties, are non-spinning and not charged,
 meaning that their deformation of the trajectories of light rays do not depend on the angle of approach.
-%\cite{federov2019notes}
 It has been well established \cite{gravitation-mtw} that the equation,
 \begin{equation}
 	u'' - u = 3 M u^2
@@ -51,22 +49,21 @@ It has been well established \cite{gravitation-mtw} that the equation,
 \end{equation}
 relates the trajectory of a light ray to the mass $M$ of a black hole, from the Schwarzschild metric;
 where $u$ represents $1/r$, being $r$ the Euclidean distance of a point on the light ray to the black hole center.
-$u$ is differentiated with respect to $\phi$, the azimuthal angle between the point and the black hole origin.
-\CMT{we may need a diagram here}
+$u$ is differentiated with respect to $\phi$, the azimuthal angle between the point and the black hole origin. See Fig.~\ref{fig:one} and its accompanying section for more detail on the geometry of this equation.
 After providing initial conditions,  it is possible to solve Eq.(\ref{eq:Sch-light-ray}) and trace the entire trajectory of the ray with high fidelity.
-Notably, this equation is modeled in 2d-spherical coordinates, meaning, if we want to use this equation to analyze light rays in 3D space, we need to find a way to find an equivalent ray that our equation models, and use the 2D ray to find the 3D ray's trajectory.
+Notably, this equation is modeled in 2D-spherical coordinates, meaning, if we want to use this equation to analyze light rays in 3D space, we need to find a way to find an equivalent ray that our equation models, and use the 2D ray to find the 3D ray's trajectory.
 
 After being able to compute the trajectory of individual rays, we can use these rays to generate a full image using ray tracing. Ray tracers render a simulated scene by casting light rays from a simulated camera, and computing what objects in the scene would be visible to that ray. If a particular camera would produce an image of let's say $1920 \times 1080$ pixels, we could build the image that camera would record by casting a light ray through each pixel. Because ray tracing's unit of perception is how simulated light rays interact with a simulated scene, it is a natural choice for simulations which involve the bending or distortion of light.
 
-\CMT{Some discussion of other papers can be made here}
+%\CMT{Some discussion of other papers can be made here}
 
-\CMT{Can improve flow here}
-This paper is organized as follows:
-in Sec.~\ref{sec:intro} we present the physical problem of tracing rays of light in the presence of a black hole;
-in Sec.~\ref{sec:impl} we describe the methods implemented and used to tackle this problem;
-in Sec.~\ref{sec:results} we discuss our results and compare to other related works;
-and finally in Sec.~\ref{sec:disc} and ~\ref{sec:concl} we present our findings and comment
-on possible future extensions to this work.
+%\CMT{Can improve flow here}
+%This paper is organized as follows:
+%in Sec.~\ref{sec:intro} we present the physical problem of tracing rays of light in the presence of a black hole;
+%in Sec.~\ref{sec:impl} we describe the methods implemented and used to tackle this problem;
+%in Sec.~\ref{sec:results} we discuss our results and compare to other related works;
+%and finally in Sec.~\ref{sec:disc} and ~\ref{sec:concl} we present our findings and comment
+%on possible future extensions to this work.
 
 Having given an introduction in Sec.~\ref{sec:intro} to the problem, we will proceed in Sec.~\ref{sec:impl} to describe our implementation approach, followed by results in  Sec.~\ref{sec:results} and a discussion in Sec.~\ref{sec:disc} and ~\ref{sec:concl}.
 
@@ -82,28 +79,27 @@ While the fundamental idea of taking a ray tracer and modifying it so that light
 
 
 \subsection{Using GSL for ODE approximation}
-As for how to compute these segments, the GNU Scientific Library's (GSL) suite \cite{10.5555/1538674} of ODE approximation tools found significant utility. GSL allows us to define our equations as C functions, and our particular ray by a set of initial conditions. From there, we can use GSL to compute a series of discrete points on the ray governed by a timestep of our choosing. For initial conditions, we need to describe,in 2D spherical coordinates, an initial point on the ray and a single successor point, which was computed using the linear direction, as we are casting rays far from the black hole's influence. As for the timestep (as it is commonly known in the GSL documentation), we allowed program users to control the "epsilon" \CMT{this requires a defintion! -- ie what is epsilon} of the simulation, with lower epsilon values resulting in more accurate trajectories, but also requiring more computed points. 
-
+As for how to compute these segments, the GNU Scientific Library's (GSL) suite \cite{10.5555/1538674} of ODE approximation tools found significant utility. GSL allows us to define our equations as C functions, and our particular ray by a set of initial conditions. From there, we can use GSL to compute a series of discrete points on the ray governed by a timestep of our choosing. For initial conditions, we need to describe,in 2D spherical coordinates, an initial point on the ray and a single successor point, which was computed using the linear direction, as we are casting rays far from the black hole's influence. As for the timestep (as it is commonly known in the GSL documentation), we allowed program users to control the distance between computed points, which we called the "epsilon" of the simulation. Lower epsilon values result in more accurate trajectories, but also require more computed points. 
+\CMT{M:this requires a defintion! -- ie what is epsilon, L: Does this work?}
 \subsection{Ensuring even spacing of computed points}
 To compute the next point on a light ray `epsilon` distance away, we would compute, using the Euclidean metric, the light ray's path with no distortion. In spherical coordinates, this allows us to compute the azimuthal angle from the black hole's origin. We can feed this updated azimuthal angle into GSL, and it will return the distance of the ray from the origin of the black hole. In effect, GSL behaves as a function from azimuthal angle to distance, allowing us to compute the needed points in 2D space. See ~\ref{fig:one} for an example of how these paths are computed.
-\TODO{Is there a better way to explain this?}
 
 \begin{figure}[h]
   \centering
   \includegraphics[width=.65\linewidth]{figs/nextpoint}
-  \caption{Nice diagram -- \TODO{now, we need a description of it}}
+  \caption{We use euclidean geometry to compute $d\phi$, then rely on GSL to stencil the ray's path until the simulation progresses by $d\phi$}
   \label{fig:one}
 \end{figure}
 
 
 \subsection{Relating our 2-variable equation to 3D space.}
-As noted earlier though, we cannot use the trajectories of rays in 2D space to render a 3D scene, meaning we need to find a way to find a 1-to-1 relationship between a subset of 3D rays and 2D rays. The solution here was to recognize that we could apply a combination of axis rotations and axis relabeling to complete the correlation. If the "origin" of the light ray, and the origin of the black hole are both located on the z=0 axis, as is the case for our 3D scenes, we can rotate our ray around the z axis until the ray's direction vector has incline $ \pi / 2 $ with respect to the black hole origin, meaning the ray has no spherical incline. At this point, the y component of the ray's origin and direction will both be zero, meaning we have reduced our 3D ray to 2D. From here, we can easily convert to spherical coordinates for use with GSL. Since this process is invertible, we have now found a way to use GSL to trace the trajectory of light rays in 3D using an equation of two variables.
+As noted earlier though, we cannot use the trajectories of rays in 2D space to render a 3D scene, meaning we need to find a way to find a 1-to-1 relationship between a subset of 3D rays and 2D rays. The solution here was to recognize that we could apply a combination of axis rotations and axis relabeling to complete the correlation. If the "origin" of the light ray, and the origin of the black hole are both located on the z axis, as is the case for our 3D scenes, we can rotate our ray around the z axis until the ray's direction vector has incline $ \pi / 2 $ with respect to the black hole origin, meaning the ray has no spherical incline. At this point, the y component of the ray's origin and direction will both be zero, meaning we have reduced our 3D ray to 2D. From here, we can easily convert to spherical coordinates for use with GSL. Since this process is invertible, we have now found a way to use GSL to trace the trajectory of light rays in 3D using an equation of two variables.
 
 
 \subsection{Image and scene handling}
-%As astronomical images can be of quite high resolution, and the effects of gravitational lensing, when viewed against a high quality background image, are more significant, we wanted to ensure our renderer would work well, even in the case of large images. To accommodate this, we allowed for different MPI processes to load different portions of the image
+%https://scholar.google.com/scholar?hl=en&as_sdt=0%2C5&q=boost+GIL+Generic+Image+Library&btnG=
 Image and scene handling was done both with JPEG and with PPM support.
-For JPEG support, the Boost's Generic Image Library \cite{schaling_boost} (and consequently libjpeg) was used, and for PPM support, a custom parser was written. Both of these parsers rely on loading the entire image into memory, which has the advantage of quick pixel access, at the cost of potentially loading a lot of unused pixel data into memory. For moderately sized images, this is an appropriate tradeoff, however, for very large astronomical images, this could quickly become a problem, especially as the size of an image (Plus whatever memory is needed for rendering) eclipses the available RAM. To deal with this, future implementations could apply a number of techniques:
+For JPEG support, the Boost's Generic Image Library \CMT{L: Would bourdev2007generic be a better citation?}\cite{bourdev2007generic} (and consequently libjpeg) was used, and for PPM support, a custom parser was written. Both of these parsers rely on loading the entire image into memory, which has the advantage of quick pixel access, at the cost of potentially loading a lot of unused pixel data into memory. For moderately sized images, this is an appropriate tradeoff, however, for very large astronomical images, this could quickly become a problem, especially as the size of an image (Plus whatever memory is needed for rendering) eclipses the available RAM. To deal with this, future implementations could apply a number of techniques:
 1. Refuse to load the image into memory, instead relying on an `fseek+fread` style implementation, which is likely to perform well on SSD storage, but poorly over the network.
 2. Decompose the image, and have each process store a portion in memory, at the cost of having to exchange pixels when a light ray "misses" our portion of the image. This strategy, if poorly optimized, could result in horrible performance, as it's quite difficult to predict the trajectories of an arbitrary light ray in advance, meaning we are likely to miss our loaded portion of the image. This could easily yield a network bottleneck.
 3. Load portions of the image that are relevant to our render only. This is somewhat of a balance of the previous two approaches, at the cost of additional complexity. 
@@ -143,7 +139,7 @@ We present two images -- Figs.~\ref{fig:eagle} and \ref{fig:starry}, it is easy 
 \begin{figure}[h]
   \centering
   \includegraphics[width=0.8\linewidth]{figs/eagle_render}
-  \caption{Image generated from a portion of the Eagle Nebula M16 downloaded from \cite{eagle-nasa_svs}.}
+  \caption{Image generated from a portion of the Eagle Nebula M16 downloaded from \CMT{L:This was actually an ESA image, https://esahubble.org/images/heic1501a/ (Publication JPEG)} \cite{esa-pillars}.}
   \label{fig:eagle}
 \end{figure}
 
@@ -170,37 +166,39 @@ Decreasing epsilon is an interesting scaling parameter, as it is responsible for
 
 We believe though, that the main parameters of interest are number of rendered pixels, and the number of cores used (across both multiple nodes and single nodes). For testing this kind of scaling without increasing the number of pixels in the scene, antialiasing level could be turned up.
 
-\TODO{When reporting results for the scaling analysis and profiling, we should mention where the runs where done -- i.e. the Niagara supercomputer \cite{10.1145/3332186.3332195}}
-
 \begin{figure*}[h]
   \centering
   \begin{minipage}{0.45\linewidth}
       \includegraphics[width=\linewidth]{figs/omp_weak2.out}
-      \caption{\TODO{HI}: omp weak 2}
-	  \Description{Weak scaling analysis relating omp thread count, time required for computation, and image width}
+      \caption{Weak scaling analysis where OMP threads utilized and image width are increased in tandem}
+	  \Description{As core count and image width increase linearly, time increases linearly }
         \label{fig:omp_weak2}
     \end{minipage}
   \hspace{.05\linewidth}
  \begin{minipage}{0.45\linewidth}
   \includegraphics[width=\linewidth]{figs/mpi_weak2.out}
- \caption{\TODO{HI}: mpi weak2 }
-    \Description{Weak scaling analysis relating mpi process count, time required for computation, and image width}
+ \caption{Weak scaling analysis where MPI process count and image width are increased in tandem}
+	  \Description{As core count and image width increase linearly, time increases linearly }
     \label{fig:mpi_weak2}
     \end{minipage}
   \begin{minipage}{0.45\linewidth}
       \includegraphics[width=\linewidth]{figs/mpi_strong.out}
-      \caption{\TODO{HI}}
-      \Description{Weak scaling analysis relating omp thread count, time required for computation, and image width}
+      \caption{Strong scaling analysis as MPI process count is increased}
+      \Description{Speedup is nearly linear and time plateaus}
       \label{fig:mpi_strong}
     \end{minipage}
   \hspace{.05\linewidth}
  \begin{minipage}{0.45\linewidth}
   \includegraphics[width=\linewidth]{figs/omp_strong.out}
- \caption{\TODO{HI}: omp strong \& ...}
+  \caption{Strong scaling analysis with OMP threads -- OMP is slightly faster}
     \Description{Weak scaling analysis relating mpi process count, time required for computation, and image width}
     \label{fig:omp_strong}
     \end{minipage}
+    \text{All analysis was performed on Niagara supercomputer \cite{10.1145/3332186.3332195}}
 \end{figure*}
+
+\TODO{Some of this needs to be rewritten because MPI beat OMP by about 1/8 speedup consistently}
+\TODO{Also that section earlier on how I praised OMP being faster needs to be rewritten to caveat}
 
 From this figure, one can see that, at 16 cores and maximum image width, OpenMP outperforms MPI by around 40 seconds. This is likely explained by the fact that the MPI implementation relies on exchanging pixel data after computations are performed, which is likely to scale poorly with core count. MPI and OpenMP are significantly more competitive at lower core counts.
 
@@ -211,17 +209,12 @@ From Figures ~\ref{fig:omp_weak2} and ~\ref{fig:mpi_weak2}, one can see that, at
 \begin{figure}[h]
   \centering
   \includegraphics[width=0.55\linewidth]{figs/omp_weak.out}
-	\caption{\TODO{HI}: ...}
+	\caption{Weak scaling analysis -- OMP thread count is increased and epsilon is decreased in tandem}
     \Description{Weak scaling analysis relating omp thread count, time required for computation, and epsilon value. }
     \label{fig:omp_weak}
 \end{figure}
 
-\TODO{Are these results legit???}
-
 Interestingly, as observed by Figure ~\ref{fig:omp_weak} decreasing epsilon results in less time complexity, before increasing required time sharply. An epsilon value of about 2-3 results in the best performance.
-
-
-\CMT{I will fix the fact that I outperformed the ideal, thats bogus}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
