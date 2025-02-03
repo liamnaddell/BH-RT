@@ -211,7 +211,7 @@ Each node of the cluster has 188 GiB/202 GB of RAM per node (at least 4 GiB/core
 Being designed for large parallel workloads, it has a fast interconnect consisting of EDR InfiniBand in a Dragonfly+ topology with Adaptive Routing.
 
 
-From this figure, \CMT{which Figure? Figs.~\ref{mpi_trong} and \ref{fig:omp_strong}?} one can see that, at 16 cores and maximum image width, OpenMP outperforms MPI by around 40 seconds. This is likely explained by the fact that the MPI implementation relies on exchanging pixel data after computations are performed, which is likely to scale poorly with core count. MPI and OpenMP are significantly more competitive at lower core counts.
+From this figure, \CMT{which Figure? Figs.~\ref{mpi_strong} and \ref{fig:omp_strong}?} one can see that, at 16 cores and maximum image width, OpenMP outperforms MPI by around 40 seconds. This is likely explained by the fact that the MPI implementation relies on exchanging pixel data after computations are performed, which is likely to scale poorly with core count. MPI and OpenMP are significantly more competitive at lower core counts.
 
 
 From Figures ~\ref{fig:omp_weak2} and ~\ref{fig:mpi_weak2}, one can see that, at 16 cores and maximum image width, OMP outperforms MPI by around 20 seconds. This is likely explained by the fact that the MPI implementation relies on exchanging pixel data after computations are performed, which is likely to scale poorly with core count. MPI and OMP are significantly more competitive at lower core counts.
