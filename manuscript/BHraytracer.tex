@@ -18,11 +18,11 @@ to render photorealistic scenes.
 A good introduction to the main techniques and practical implementations can be found
 in Ref.\cite{raytracing_in_one_weekend}.
 \CMT{maybe describe the basics in 2 or 3 sentences... Liam: Some basics are covered in the "After being able to compute the trajectory" paragraph}
-In general this implies expensive proccesses and requires the corresponding aproppiate compute time
+In general this implies expensive processes and requires the corresponding appropriate compute time
 as well as complex and sophisticated algorithms.
 Their applications range from generation of high-quality realistic visualizations to
 rendering of movies or animations, and up to even more exotic images of black holes,
-such as the ones remarkably done for black hole reciding at the center of the galaxy M87 \cite{M87_EHT_i}
+such as the ones remarkably done for black hole residing at the center of the galaxy M87 \cite{M87_EHT_i}
 and the supermassive black hole Sagittarius A* at the center of our own galaxy \cite{SagA_EHT_i}. Images like these have captivated the minds and interest of millions. \CMT{Liam: This couple of sentences seem to imply that Sagittarius A* and M87 were ray traced images...}
 Since we have well established the theory and equations for describing the trajectories of light rays around a black hole, it is natural to try to use a ray tracer to render a scene within this geometry which ultimately results in a particular distortion applied to the general techniques.
 
@@ -79,7 +79,7 @@ While the fundamental idea of taking a ray tracer and modifying it so that light
 
 
 \subsection{Using GSL for ODE approximation}
-As for how to compute these segments, the GNU Scientific Library's (GSL) suite \cite{10.5555/1538674} of ODE approximation tools found significant utility. GSL allows us to define our equations as C functions, and our particular ray by a set of initial conditions. From there, we can use GSL to compute a series of discrete points on the ray governed by a timestep of our choosing. For initial conditions, we need to describe,in 2D spherical coordinates, an initial point on the ray and a single successor point, which was computed using the linear direction, as we are casting rays far from the black hole's influence. As for the \textit{timestep} (as it is commonly known in the GSL documentation), we allowed program users to control the distance between computed points, which we eill refer to as $\epsilon$, i.e. the \textit{discretization} or \textit{step} of the simulation. Lower values of $\epsilon$ result in more accurate trajectories, but also require more computed points. 
+As for how to compute these segments, the GNU Scientific Library's (GSL) suite \cite{10.5555/1538674} of ODE approximation tools found significant utility. GSL allows us to define our equations as C functions, and our particular ray by a set of initial conditions. From there, we can use GSL to compute a series of discrete points on the ray governed by a timestep of our choosing. For initial conditions, we need to describe,in 2D spherical coordinates, an initial point on the ray and a single successor point, which was computed using the linear direction, as we are casting rays far from the black hole's influence. As for the \textit{timestep} (as it is commonly known in the GSL documentation), we allowed program users to control the distance between computed points, which we will refer to as $\epsilon$, i.e. the \textit{discretization} or \textit{step} of the simulation. Lower values of $\epsilon$ result in more accurate trajectories, but also require more computed points. 
 
 \subsection{Ensuring even spacing of computed points}
 To compute the next point on a light ray $\epsilon$ distance away, we would compute, using the Euclidean metric, the light ray's path with no distortion. In spherical coordinates, this allows us to compute the azimuthal angle from the black hole's origin. We can feed this updated azimuthal angle into GSL, and it will return the distance of the ray from the origin of the black hole. In effect, GSL behaves as a function from azimuthal angle to distance, allowing us to compute the needed points in 2D space. See ~\ref{fig:one} for an example of how these paths are computed.
@@ -87,7 +87,7 @@ To compute the next point on a light ray $\epsilon$ distance away, we would comp
 \begin{figure}[h]
   \centering
   \includegraphics[width=.65\linewidth]{figs/nextpoint}
-  \caption{We use euclidean geometry to compute $d\phi$, then rely on GSL to stencil the ray's path until the simulation progresses by $d\phi$}
+  \caption{We use Euclidean geometry to compute $d\phi$, then rely on GSL to stencil the ray's path until the simulation progresses by $d\phi$}
   \label{fig:one}
 \end{figure}
 
@@ -114,7 +114,7 @@ The downside of domain decomposition is that we now have separate bands rendered
 
 
 \subsection{Use of OpenMP}
-In the context of a single band, it is quite easy to use OpenMP \cite{660313_OMP} to accellerate rendering, as the problem can be decomposed along the individual scanlines. This was quite helpful, as MPI was best used to distribute the problem across nodes, and OpenMP was useful for distributing the problem across cores.
+In the context of a single band, it is quite easy to use OpenMP \cite{660313_OMP} to accelerate rendering, as the problem can be decomposed along the individual scanlines. This was quite helpful, as MPI was best used to distribute the problem across nodes, and OpenMP was useful for distributing the problem across cores.
 Additionally, as shown in Sec.~\ref{sec:results}, OpenMP threads scale significantly better than MPI processes, meaning we would like to take advantage of the increased performance wherever possible.
 
 
@@ -205,14 +205,14 @@ We believe though, that the main parameters of interest are number of rendered p
 From this figure, one can see that, at 16 cores and maximum image width, OpenMP outperforms MPI by around 40 seconds. This is likely explained by the fact that the MPI implementation relies on exchanging pixel data after computations are performed, which is likely to scale poorly with core count. MPI and OpenMP are significantly more competitive at lower core counts.
 
 
-From Figures ~\ref{fig:omp_weak2} and ~\ref{fig:mpi_weak2}, one can see that, at 16 cores and maximum image width, OMP outperforms MPI by around 20 seconds. This is likely explained by the fact that the MPI implementation relies on exchanging pixel data after computations are performed, which is likely to scale poorly with core count. MPI and OMP are significantly more competative at lower core counts.
+From Figures ~\ref{fig:omp_weak2} and ~\ref{fig:mpi_weak2}, one can see that, at 16 cores and maximum image width, OMP outperforms MPI by around 20 seconds. This is likely explained by the fact that the MPI implementation relies on exchanging pixel data after computations are performed, which is likely to scale poorly with core count. MPI and OMP are significantly more competitive at lower core counts.
 
 
 \begin{figure}[h]
   \centering
   \includegraphics[width=0.55\linewidth]{figs/omp_weak.out}
 	\caption{Weak scaling analysis -- OMP thread count is increased and $\epsilon$ is decreased in tandem}
-    \Description{Weak scaling analysis relating omp thread count, time required for computation, and $\epsilon$ value.}
+    \Description{Weak scaling analysis relating OMP thread count, time required for computation, and $\epsilon$ value.}
     \label{fig:omp_weak}
 \end{figure}
 
