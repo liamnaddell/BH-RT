@@ -46,7 +46,8 @@ It has been well established \cite{gravitation-mtw} that the equation,
 \end{equation}
 relates the trajectory of a light ray to the mass $M$ of a black hole, from the Schwarzschild metric;
 where $u$ represents $1/r$, being $r$ the Euclidean distance of a point on the light ray to the black hole center.
-$u$ is differentiated with respect to $\phi$, the azimuthal angle between the point and the black hole origin. See Fig.~\ref{fig:one} and its accompanying section for more detail on the geometry of this equation.
+$u$ is differentiated with respect to $\phi$, the azimuthal angle between the point and the black hole origin.
+See Fig.~\ref{fig:one} and its accompanying section for more detail on the geometry of this equation.
 After providing initial conditions,  it is possible to solve Eq.(\ref{eq:Sch-light-ray}) and trace the entire trajectory of the ray with high fidelity.
 Notably, this equation is modeled in 2D-spherical coordinates, meaning, if we want to use this equation to analyze light rays in 3D space, we need to find a way to find an equivalent ray that our equation models, and use the 2D ray to find the 3D ray's trajectory.
 
@@ -79,13 +80,14 @@ While the fundamental idea of taking a ray tracer and modifying it so that light
 As for how to compute these segments, the GNU Scientific Library's (GSL) suite \cite{10.5555/1538674} of ODE approximation tools found significant utility. GSL allows us to define our equations as C functions, and our particular ray by a set of initial conditions. From there, we can use GSL to compute a series of discrete points on the ray governed by a timestep of our choosing. For initial conditions, we need to describe,in 2D spherical coordinates, an initial point on the ray and a single successor point, which was computed using the linear direction, as we are casting rays far from the black hole's influence. As for the \textit{timestep} (as it is commonly known in the GSL documentation), we allowed program users to control the distance between computed points, which we will refer to as $\varepsilon$, i.e. the \textit{discretization} or \textit{step} of the simulation. Lower values of $\varepsilon$ result in more accurate trajectories, but also require more computed points. 
 
 \subsection{Ensuring even spacing of computed points}
-To compute the next point on a light ray $\varepsilon$ distance away, we would compute, using the Euclidean metric, the light ray's path with no distortion. In spherical coordinates, this allows us to compute the azimuthal angle from the black hole's origin. We can feed this updated azimuthal angle into GSL, and it will return the distance of the ray from the origin of the black hole. In effect, GSL behaves as a function from azimuthal angle to distance, allowing us to compute the needed points in 2D space. See ~\ref{fig:one} for an example of how these paths are computed.
+To compute the next point on a light ray $\varepsilon$ distance away, we would compute, using the Euclidean metric, the light ray's path with no distortion. In spherical coordinates, this allows us to compute the azimuthal angle from the black hole's origin. We can feed this updated azimuthal angle into GSL, and it will return the distance of the ray from the origin of the black hole. In effect, GSL behaves as a function from azimuthal angle to distance, allowing us to compute the needed points in 2D space.
+Fig~\ref{fig:nextpoint} despites an example of how these paths are computed.
 
 \begin{figure}[h]
   \centering
   \includegraphics[width=.65\linewidth]{figs/nextpoint}
   \caption{We use Euclidean geometry to compute $d\phi$, then rely on GSL to stencil the ray's path until the simulation progresses by $d\phi$}
-  \label{fig:one}
+  \label{fig:nextpoint}
 \end{figure}
 
 
