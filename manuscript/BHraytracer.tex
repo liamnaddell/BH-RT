@@ -1,6 +1,3 @@
-%Just putting something here as a placeholder..(GSL) e
-%Not sure what to put here
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -35,7 +32,7 @@ i) its open-source implementation;
 ii) the minimalistic and simplistic implementation strategy, i.e. by tackling
 mostly the actual mathematical problem using specialized libraries
 to solve the governing differential equation of the problem;
-iii) the proximity \CMT{Liam: I'm not sure what is meant by this?} to implement this in a farely efficient and high-performing
+iii) the proximity \CMT{Liam: I'm not sure what is meant by this?} to implement this in a fairly efficient and high-performing
 way by employing standards in shared-memory and distributed-memory paradigms;
 and iv) the hardware agnostic approach, i.e. not depending on specialized hardware, accelerators or GPUs which one could argue would be much better suited for tackling this type of problems.
 
@@ -79,10 +76,10 @@ While the fundamental idea of taking a ray tracer and modifying it so that light
 
 
 \subsection{Using GSL for ODE approximation}
-As for how to compute these segments, the GNU Scientific Library's (GSL) suite \cite{10.5555/1538674} of ODE approximation tools found significant utility. GSL allows us to define our equations as C functions, and our particular ray by a set of initial conditions. From there, we can use GSL to compute a series of discrete points on the ray governed by a timestep of our choosing. For initial conditions, we need to describe,in 2D spherical coordinates, an initial point on the ray and a single successor point, which was computed using the linear direction, as we are casting rays far from the black hole's influence. As for the \textit{timestep} (as it is commonly known in the GSL documentation), we allowed program users to control the distance between computed points, which we will refer to as $\epsilon$, i.e. the \textit{discretization} or \textit{step} of the simulation. Lower values of $\epsilon$ result in more accurate trajectories, but also require more computed points. 
+As for how to compute these segments, the GNU Scientific Library's (GSL) suite \cite{10.5555/1538674} of ODE approximation tools found significant utility. GSL allows us to define our equations as C functions, and our particular ray by a set of initial conditions. From there, we can use GSL to compute a series of discrete points on the ray governed by a timestep of our choosing. For initial conditions, we need to describe,in 2D spherical coordinates, an initial point on the ray and a single successor point, which was computed using the linear direction, as we are casting rays far from the black hole's influence. As for the \textit{timestep} (as it is commonly known in the GSL documentation), we allowed program users to control the distance between computed points, which we will refer to as $\varepsilon$, i.e. the \textit{discretization} or \textit{step} of the simulation. Lower values of $\varepsilon$ result in more accurate trajectories, but also require more computed points. 
 
 \subsection{Ensuring even spacing of computed points}
-To compute the next point on a light ray $\epsilon$ distance away, we would compute, using the Euclidean metric, the light ray's path with no distortion. In spherical coordinates, this allows us to compute the azimuthal angle from the black hole's origin. We can feed this updated azimuthal angle into GSL, and it will return the distance of the ray from the origin of the black hole. In effect, GSL behaves as a function from azimuthal angle to distance, allowing us to compute the needed points in 2D space. See ~\ref{fig:one} for an example of how these paths are computed.
+To compute the next point on a light ray $\varepsilon$ distance away, we would compute, using the Euclidean metric, the light ray's path with no distortion. In spherical coordinates, this allows us to compute the azimuthal angle from the black hole's origin. We can feed this updated azimuthal angle into GSL, and it will return the distance of the ray from the origin of the black hole. In effect, GSL behaves as a function from azimuthal angle to distance, allowing us to compute the needed points in 2D space. See ~\ref{fig:one} for an example of how these paths are computed.
 
 \begin{figure}[h]
   \centering
@@ -160,11 +157,11 @@ We present two images -- Figs.~\ref{fig:eagle} and \ref{fig:starry}, it is easy 
 
 \subsection{Scaling analysis}
 
-With this project, one can attempt to scale along many different axis. You can increase the size of the background image to stress image parsing, you can increase the number of rendered pixels, you can decrease $\epsilon$, yielding to more calls into GSL, or you can increase samples-per-pixel which controls antialiasing. For weak scaling, you can also scale by adding more nodes, or by adding more cores. 
+With this project, one can attempt to scale along many different axis. You can increase the size of the background image to stress image parsing, you can increase the number of rendered pixels, you can decrease $\varepsilon$, yielding to more calls into GSL, or you can increase samples-per-pixel which controls antialiasing. For weak scaling, you can also scale by adding more nodes, or by adding more cores. 
 
 When increasing the size of the background image, this increases the time spent outside the parallel region, as the background image has to be parsed by each process, which is likely to take the same amount of time per node. As such, it does not present significant interest for scaling analysis.
 
-Decreasing $\epsilon$ is an interesting scaling parameter, as it is responsible for some of the fidelity of a rendered image. The challenge is that it is hard to be sure how decreasing/increasing $\epsilon$ will impact the amount of time needed for a GSL call, which makes it an interesting parameter.
+Decreasing $\varepsilon$ is an interesting scaling parameter, as it is responsible for some of the fidelity of a rendered image. The challenge is that it is hard to be sure how decreasing/increasing $\varepsilon$ will impact the amount of time needed for a GSL call, which makes it an interesting parameter.
 
 We believe though, that the main parameters of interest are number of rendered pixels, and the number of cores used (across both multiple nodes and single nodes). For testing this kind of scaling without increasing the number of pixels in the scene, antialiasing level could be turned up.
 
@@ -172,7 +169,8 @@ We believe though, that the main parameters of interest are number of rendered p
   \centering
   \begin{minipage}{0.45\linewidth}
       \includegraphics[width=\linewidth]{figs/omp_weak2.out}
-      \caption{Weak scaling analysis where OMP threads utilized and image width are increased in tandem}
+      \caption{Weak scaling analysis where OMP threads utilized and image width are increased in tandem
+	  \TODO{Provide units of time and width!}}
 	  \Description{As core count and image width increase linearly, time increases linearly }
         \label{fig:omp_weak2}
     \end{minipage}
@@ -196,13 +194,22 @@ We believe though, that the main parameters of interest are number of rendered p
     \Description{Weak scaling analysis relating mpi process count, time required for computation, and image width}
     \label{fig:omp_strong}
     \end{minipage}
-    \text{All analysis was performed on Niagara supercomputer \cite{10.1145/3332186.3332195}}
 \end{figure*}
 
 \TODO{Some of this needs to be rewritten because MPI beat OMP by about 1/8 speedup consistently}
 \TODO{Also that section earlier on how I praised OMP being faster needs to be rewritten to caveat}
 
-From this figure, one can see that, at 16 cores and maximum image width, OpenMP outperforms MPI by around 40 seconds. This is likely explained by the fact that the MPI implementation relies on exchanging pixel data after computations are performed, which is likely to scale poorly with core count. MPI and OpenMP are significantly more competitive at lower core counts.
+\CMT{if tests were run on Niagara, whay the scaling analysis stops at 16 cores and not 40? -- OR are these results from the Teach cluster instead?}
+
+All the results and analysis presented in this section, were obtained
+running our code on the Niagara supercomputer \cite{10.1145/3332186.3332195},
+which is a large homogeneous cluster composed by 2,024 Lenovo SD530 servers
+each with 40 Intel "Skylake"/"CascadeLake" cores working at approx. 2.4/2.5 GHz.
+Each node of the cluster has 188 GiB/202 GB of RAM per node (at least 4 GiB/core for user jobs and roughly 170 GiB/node at most).
+Being designed for large parallel workloads, it has a fast interconnect consisting of EDR InfiniBand in a Dragonfly+ topology with Adaptive Routing.
+
+
+From this figure, \CMT{which Figure? Figs.~\ref{mpi_trong} and \ref{fig:omp_strong}?} one can see that, at 16 cores and maximum image width, OpenMP outperforms MPI by around 40 seconds. This is likely explained by the fact that the MPI implementation relies on exchanging pixel data after computations are performed, which is likely to scale poorly with core count. MPI and OpenMP are significantly more competitive at lower core counts.
 
 
 From Figures ~\ref{fig:omp_weak2} and ~\ref{fig:mpi_weak2}, one can see that, at 16 cores and maximum image width, OMP outperforms MPI by around 20 seconds. This is likely explained by the fact that the MPI implementation relies on exchanging pixel data after computations are performed, which is likely to scale poorly with core count. MPI and OMP are significantly more competitive at lower core counts.
@@ -211,12 +218,12 @@ From Figures ~\ref{fig:omp_weak2} and ~\ref{fig:mpi_weak2}, one can see that, at
 \begin{figure}[h]
   \centering
   \includegraphics[width=0.55\linewidth]{figs/omp_weak.out}
-	\caption{Weak scaling analysis -- OMP thread count is increased and $\epsilon$ is decreased in tandem}
-    \Description{Weak scaling analysis relating OMP thread count, time required for computation, and $\epsilon$ value.}
+	\caption{Weak scaling analysis -- OMP thread count is increased and $\varepsilon$ is decreased in tandem}
+    \Description{Weak scaling analysis relating OMP thread count, time required for computation, and $\varepsilon$ value.}
     \label{fig:omp_weak}
 \end{figure}
 
-Interestingly, as observed by Figure ~\ref{fig:omp_weak} decreasing $\epsilon$ results in less time complexity, before increasing required time sharply. An $\epsilon$ value of about 2-3 results in the best performance.
+Interestingly, as observed by Figure ~\ref{fig:omp_weak} decreasing $\varepsilon$ results in less time complexity, before increasing required time sharply. An $\varepsilon$ value of about 2-3 results in the best performance.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
