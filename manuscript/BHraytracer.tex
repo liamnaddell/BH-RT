@@ -175,13 +175,15 @@ We believe though, that the main parameters of interest are number of rendered p
   \hspace{.05\linewidth}
  \begin{minipage}{0.45\linewidth}
   \includegraphics[width=\linewidth]{figs/mpi_weak2.out}
- \caption{Weak scaling analysis where MPI process count and image width are increased in tandem}
+ \caption{Weak scaling analysis where MPI process count and image width are increased in tandem
+	 -- \CMT{the lines are very close to each other and it is even hard to distinguish them, for visual aids I'd suggest to make one with dashed lines or thicker than the other one so the differences are clearer}
 	  \Description{As core count and image width increase linearly, time increases linearly }
     \label{fig:mpi_weak2}
     \end{minipage}
   \begin{minipage}{0.45\linewidth}
       \includegraphics[width=\linewidth]{figs/mpi_strong.out}
-      \caption{Strong scaling analysis as MPI process count is increased}
+	  \caption{Strong scaling analysis as MPI process count is increased
+	  -- \CMT{it would be better to keep OMP plots under OMP ones and MPI plots under MPI ones...}}
       \Description{Speedup is nearly linear and time plateaus}
       \label{fig:mpi_strong}
     \end{minipage}
