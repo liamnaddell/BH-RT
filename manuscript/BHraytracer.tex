@@ -5,16 +5,10 @@
 \label{sec:intro}
 
 
-% The truth: I wanted to take paco's D18 course, but I couldn't afford it (both in time and money), so I wanted to do something graphics-y. 
-%            It also somehow got into my head that raytracing black holes was something to do, I think maybe paco's students showed me?
-% What I will tell people:
-
-% Motivation... why we are doing this? and why is interesting...
 Raytracing is a foundational technique in computer graphics, which can be used
 to render photorealistic scenes.
 A good introduction to the main techniques and practical implementations can be found
 in Ref.\cite{raytracing_in_one_weekend}.
-\CMT{maybe describe the basics in 2 or 3 sentences... Liam: Some basics are covered in the "After being able to compute the trajectory" paragraph}
 In general this implies expensive processes and requires the corresponding appropriate compute time
 as well as complex and sophisticated algorithms.
 Their applications range from generation of high-quality realistic visualizations to
@@ -25,8 +19,6 @@ In these cases, ray-tracing techniques have been applied to
 General Relativistic Magneto-HydroDynamics simulations in order to produce 
 the so-called fiducial templated models of the event horizon images.
 Images like these have captivated the minds and interest of millions.
-\CMT{Liam: This couple of sentences seem to imply that Sagittarius A* and M87 were ray traced images...}
-\CMT{M: my understanding is that ray-tracing techniques have been used when buidling the fiducial models that allowed the generation of these images... adding that to the text.}
 Since we have well established the theory and equations for describing the trajectories of light rays around a black hole, it is natural to try to use a ray tracer to render a scene within this geometry which ultimately results in a particular distortion applied to the general techniques.
 
 We should emphasize that there exist a large variety of ray tracer implementations already 
@@ -105,7 +97,6 @@ As noted earlier though, we cannot use the trajectories of rays in 2D space to r
 %https://scholar.google.com/scholar?hl=en&as_sdt=0%2C5&q=boost+GIL+Generic+Image+Library&btnG=
 Image and scene handling was done both with JPEG and with PPM support.
 For JPEG support, the Boost's Generic Image Library
-\CMT{L: Would bourdev2007generic be a better citation? -- M: let's do both}
 \cite{schaling_boost,bourdev2007generic} (and consequently libjpeg) was used, and for PPM support, a custom parser was written. Both of these parsers rely on loading the entire image into memory, which has the advantage of quick pixel access, at the cost of potentially loading a lot of unused pixel data into memory. For moderately sized images, this is an appropriate tradeoff, however, for very large astronomical images, this could quickly become a problem, especially as the size of an image (Plus whatever memory is needed for rendering) eclipses the available RAM. To deal with this, future implementations could apply a number of techniques:
 1. Refuse to load the image into memory, instead relying on an `fseek+fread` style implementation, which is likely to perform well on SSD storage, but poorly over the network.
 2. Decompose the image, and have each process store a portion in memory, at the cost of having to exchange pixels when a light ray "misses" our portion of the image. This strategy, if poorly optimized, could result in horrible performance, as it's quite difficult to predict the trajectories of an arbitrary light ray in advance, meaning we are likely to miss our loaded portion of the image. This could easily yield a network bottleneck.
@@ -177,8 +168,7 @@ We believe though, that the main parameters of interest are number of rendered p
   \centering
   \begin{minipage}{0.45\linewidth}
       \includegraphics[width=\linewidth]{figs/omp_weak2.out}
-      \caption{Weak scaling analysis where OMP threads utilized and image width are increased in tandem
-	  \TODO{Provide units of time and width!}}
+      \caption{Weak scaling analysis where OMP threads utilized and image width are increased in tandem}
 	  \Description{As core count and image width increase linearly, time increases linearly }
         \label{fig:omp_weak2}
     \end{minipage}
