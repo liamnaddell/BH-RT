@@ -283,7 +283,7 @@ Another aspect of this implementation worth highlighting is its tight bottom-up 
 I.e. either in the form of shared-memory or distributed-memory parallelism, such implementation
 allows for well-integrated and optimized scaling to run the ray tracer in larger problems.
 This is a substantial much solid and potentially better scalable solution than other ones
-where \textit{farming rendering} approaches are used.
+where \textit{farm rendering} approaches are used \cite{10.1145/3528223.3530171,app112412046}.
 Moreover the latter approaches would be only useful in cases of \textit{embarassignly parallel}
 tasks (e.g. by splitting images or partioning independent data/field-views),
 and even in those case it would be questionable the preparation work done required in order to

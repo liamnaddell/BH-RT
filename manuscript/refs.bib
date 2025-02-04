@@ -59,7 +59,7 @@
   doi={10.1109/TVCG.2016.2599041}}
 
 
-@Inbook{Peddie2019i_hardware,
+@Inbook{Peddie2019_hardware,
 author="Peddie, Jon",
 title="Ray-Tracing Hardware",
 bookTitle="Ray Tracing: A Tool for All",
@@ -86,6 +86,45 @@ isbn="978-3-030-17490-3",
 doi="10.1007/978-3-030-17490-3_6",
 url="https://doi.org/10.1007/978-3-030-17490-3_6"
 }
+
+
+% farm rendering
+@article{10.1145/3528223.3530171,
+author = {Fouladi, Sadjad and Shacklett, Brennan and Poms, Fait and Arora, Arjun and Ozdemir, Alex and Raghavan, Deepti and Hanrahan, Pat and Fatahalian, Kayvon and Winstein, Keith},
+title = {R2E2: low-latency path tracing of terabyte-scale scenes using thousands of cloud CPUs},
+year = {2022},
+issue_date = {July 2022},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {41},
+number = {4},
+issn = {0730-0301},
+url = {https://doi.org/10.1145/3528223.3530171},
+doi = {10.1145/3528223.3530171},
+abstract = {In this paper we explore the viability of path tracing massive scenes using a "supercomputer" constructed on-the-fly from thousands of small, serverless cloud computing nodes. We present R2E2 (Really Elastic Ray Engine) a scene decomposition-based parallel renderer that rapidly acquires thousands of cloud CPU cores, loads scene geometry from a pre-built scene BVH into the aggregate memory of these nodes in parallel, and performs full path traced global illumination using an inter-node messaging service designed for communicating ray data. To balance ray tracing work across many nodes, R2E2 adopts a service-oriented design that statically replicates geometry and texture data from frequently traversed scene regions onto multiple nodes based on estimates of load, and dynamically assigns ray tracing work to lightly loaded nodes holding the required data. We port pbrt's ray-scene intersection components to the R2E2 architecture, and demonstrate that scenes with up to a terabyte of geometry and texture data (where as little as 1/250th of the scene can fit on any one node) can be path traced at 4K resolution, in tens of seconds using thousands of tiny serverless nodes on the AWS Lambda platform.},
+journal = {ACM Trans. Graph.},
+month = jul,
+articleno = {76},
+numpages = {12},
+keywords = {lambda computing, ray tracing}
+}
+
+
+@Article{app112412046,
+AUTHOR = {Skala, Tibor and Todorovac, Mirsad and Kozlovszky, Miklós and Maričević, Marko},
+TITLE = {An Experimental Implementation of a Resilient Graphic Rendering Cluster},
+JOURNAL = {Applied Sciences},
+VOLUME = {11},
+YEAR = {2021},
+NUMBER = {24},
+ARTICLE-NUMBER = {12046},
+URL = {https://www.mdpi.com/2076-3417/11/24/12046},
+ISSN = {2076-3417},
+ABSTRACT = {In this paper, we describe the challenge of developing a web front that will give an interactive and relatively immediate result without the overhead of complex grid scheduling, in the sense of the grid’s lack of interactivity and need for certificates that users simply do not own. In particular, the local system of issuing grid certificates is somewhat limited to a narrower community compared to that which we wanted to reach in order to popularize the grid, and our desired level of service availability exceeded the use of the cluster for grid purposes. Therefore, we have developed an interactive, scalable web front and back-end animation rendering frame dispatcher to access our cluster’s rendering power with low latency, low overhead and low performance penalty added to the cost of Persistence of Vision Ray rendering. The system is designed to survive temporary or catastrophic failures such as temporary power loss, load shedding, malfunction of rendering server cluster or client hardware, whether through an automatic or a manual restart, as long as the hardware that keeps the previous work and periodically dumped state of the automata is preserved.},
+DOI = {10.3390/app112412046}
+}
+
+
 
 
 
