@@ -259,15 +259,16 @@ context.
 The impact is felt in 3 areas:
 
 1. Attempting to set up this particular system is theoretically easy and practically quite difficult. The initial conditions are not obvious. GSL asks for an initial radius, initial angle, and the derivative of the radius with respect to azimuthal angle. Unfortunately, it is not possible to find this derivative without an equation that models the trajectory of light rays, which is the equation we were trying to approximate in the first place! Solving this chicken-and-egg problem is a great educational experience, and forces one to consider more deeply the significance of the parameters given to GSL. 
-% (TODO: mention that debugging is hell?)
+% (TODO: mention that debugging is hell?) -- isn't that always the case?
 
-2. Using GSL for course analysis is a nonstandard application. One key detail of the project is that we need to restrict the number of points GSL returns, while keeping the distance between points relatively even. (TODO: future work: dynamic spacing based off of distortion). The way this challenge was solved was by approximating the angle between the black hole on a line of potential future points, as described earlier, and having the GSL driver stencil the equation until it reaches said line. Idk some closer sentence.
+2. Using GSL for course analysis is a nonstandard application. One key detail of the project is that we need to restrict the number of points GSL returns, while keeping the distance between points relatively even. (\TODO{future work: dynamic spacing based off of distortion}). The way this challenge was solved was by approximating the angle between the black hole on a line of potential future points, as described earlier, and having the GSL driver stencil the equation until it reaches said line. Idk some closer sentence.
 
 3. The problem of relating the 2D ray-trajectory equation to a 3D scene has no readily available solutions. As such, it challenges potential students to think deeply about the problem, and to come up with original solutions.
 
 Beyond the challenges associated with GSL, this project's requirement of parallel image processing provides an opportunity to learn how to process, parse, and generate large images in parallel. In particular, handling the case where the total handled image size is larger than system memory can yield many variant implementations with considerable performance differences and technical complexity. 
 
-Finally, this project provides an opportunity to practice domain decomposition techniques in a practical setting. %TODO: not sure what else to add here..
+Finally, this project provides an opportunity to practice domain decomposition techniques in a practical setting.
+%TODO: not sure what else to add here..
 
 
 \subsection{General Applicability}
