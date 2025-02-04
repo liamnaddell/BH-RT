@@ -11,7 +11,7 @@ A good introduction to the main techniques and practical implementations can be 
 in Ref.\cite{raytracing_in_one_weekend}.
 In general this implies expensive processes and requires the corresponding appropriate compute time
 as well as complex and sophisticated algorithms.
-Their applications range from generation of high-quality realistic visualizations to
+Their applications \cite{Peddie2019_appns} range from generation of high-quality realistic visualizations to
 rendering of movies or animations, and up to even more exotic images of black holes,
 such as the ones remarkably done for black hole residing at the center of the galaxy M87 \cite{M87_EHT_i}
 and the supermassive black hole Sagittarius A* at the center of our own galaxy \cite{SagA_EHT_i}.
@@ -32,7 +32,8 @@ mostly the actual mathematical problem using specialized libraries
 to solve the governing differential equation of the problem;
 iii) the proximity \CMT{Liam: I'm not sure what is meant by this?} to implement this in a fairly efficient and high-performing
 way by employing standards in shared-memory and distributed-memory paradigms;
-and iv) the hardware agnostic approach, i.e. not depending on specialized hardware, accelerators or GPUs which one could argue would be much better suited for tackling this type of problems.
+and iv) the hardware agnostic approach, i.e. not depending on specialized hardware, accelerators or GPUs \cite{Peddie2019_hardware}
+which one could argue would be much better suited for tackling this type of problems.
 
 In order to model a simple black hole scenario, we can use the Schwarzschild metric \cite{schw_soln-2007}.
 This models black holes which, among other properties, are non-spinning and not charged,
@@ -168,7 +169,7 @@ We believe though, that the main parameters of interest are number of rendered p
   \centering
   \begin{minipage}{0.45\linewidth}
       \includegraphics[width=\linewidth]{figs/omp_weak2.out}
-      \caption{Weak scaling analysis where OMP threads utilized and image width are increased in tandem}
+      \caption{Weak scaling analysis where OpenMP threads utilized and image width are increased in tandem}
 	  \Description{As core count and image width increase linearly, time increases linearly }
         \label{fig:omp_weak2}
     \end{minipage}
@@ -190,7 +191,7 @@ We believe though, that the main parameters of interest are number of rendered p
   \hspace{.05\linewidth}
  \begin{minipage}{0.45\linewidth}
   \includegraphics[width=\linewidth]{figs/omp_strong.out}
-  \caption{Strong scaling analysis with OMP threads -- OMP is slightly faster}
+  \caption{Strong scaling analysis with OpenMP threads -- OpenMP is slightly faster}
     \Description{Weak scaling analysis relating mpi process count, time required for computation, and image width}
     \label{fig:omp_strong}
     \end{minipage}
@@ -212,14 +213,14 @@ Being designed for large parallel workloads, it has a fast interconnect consisti
 From this figure, \CMT{which Figure? Figs.~\ref{fig:mpi_strong} and \ref{fig:omp_strong}?} one can see that, at 16 cores and maximum image width, OpenMP outperforms MPI by around 40 seconds. This is likely explained by the fact that the MPI implementation relies on exchanging pixel data after computations are performed, which is likely to scale poorly with core count. MPI and OpenMP are significantly more competitive at lower core counts.
 
 
-From Figures ~\ref{fig:omp_weak2} and ~\ref{fig:mpi_weak2}, one can see that, at 16 cores and maximum image width, OMP outperforms MPI by around 20 seconds. This is likely explained by the fact that the MPI implementation relies on exchanging pixel data after computations are performed, which is likely to scale poorly with core count. MPI and OMP are significantly more competitive at lower core counts.
+From Figures ~\ref{fig:omp_weak2} and ~\ref{fig:mpi_weak2}, one can see that, at 16 cores and maximum image width, OpenMP outperforms MPI by around 20 seconds. This is likely explained by the fact that the MPI implementation relies on exchanging pixel data after computations are performed, which is likely to scale poorly with core count. MPI and OpenMP are significantly more competitive at lower core counts.
 
 
 \begin{figure}[h]
   \centering
   \includegraphics[width=0.55\linewidth]{figs/omp_weak.out}
-	\caption{Weak scaling analysis -- OMP thread count is increased and $\varepsilon$ is decreased in tandem}
-    \Description{Weak scaling analysis relating OMP thread count, time required for computation, and $\varepsilon$ value.}
+	\caption{Weak scaling analysis -- OpenMP thread count is increased and $\varepsilon$ is decreased in tandem}
+    \Description{Weak scaling analysis relating OpenMP thread count, time required for computation, and $\varepsilon$ value.}
     \label{fig:omp_weak}
 \end{figure}
 
@@ -288,7 +289,7 @@ tasks (e.g. by splitting images or partioning independent data/field-views),
 and even in those case it would be questionable the preparation work done required in order to
 prepare, administrate, and recombine these results.
 Of course, we should not forget implementations employing \textit{GPU rendering}, for which
-these devices and implementations are the most well-suited to be used.
+these devices and implementations are the most well-suited to be used \cite{Peddie2019_hardware}.
 But as argued at the beggining of this work, those would be considered specialized devices
 and even the corresponding implementations are taylored and fine-tuned for such a hardware.
 Not arguably, these would be the ones offering the best performing and scaling results.
