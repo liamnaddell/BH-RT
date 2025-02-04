@@ -29,7 +29,7 @@ Images like these have captivated the minds and interest of millions.
 \CMT{M: my understanding is that ray-tracing techniques have been used when buidling the fiducial models that allowed the generation of these images... adding that to the text.}
 Since we have well established the theory and equations for describing the trajectories of light rays around a black hole, it is natural to try to use a ray tracer to render a scene within this geometry which ultimately results in a particular distortion applied to the general techniques.
 
-We should emphasize that there exist a large variety of raytracer implementations already 
+We should emphasize that there exist a large variety of ray tracer implementations already 
 \cite{imbens2023graphicalprocessinggeodesicpropagation,10.2312/EGPGV/EGPGV12/051-060,7539599_OSPRay}
 and even with direct astrophysical applications such as the rendering of black hole surroundings
 \cite{10.2312:vmv.20221208,sharma2023mahakalapythonbasedmodularraytracing,James_2015}.
@@ -138,7 +138,7 @@ GitHub repository
 
 \subsection{A selection of renders}
 
-This section includes results of images rendered employing our raytracer's implementation.
+This section includes results of images rendered employing our ray tracer's implementation.
 The background images for these renders were taken from NASA's Scientific Visualization Studio (\url{https://svs.gsfc.nasa.gov/}).
 We present two images -- Figs.~\ref{fig:eagle} and \ref{fig:starry}, it is easy to see the effects of gravitational lensing, as well as the clear Einstein ring. 
 
@@ -154,7 +154,7 @@ We present two images -- Figs.~\ref{fig:eagle} and \ref{fig:starry}, it is easy 
 \begin{figure}[h]
   \centering
   \includegraphics[width=0.8\linewidth]{figs/starry_render}
-  \caption{A second example of an application from our raytracer implementation,
+  \caption{A second example of an application from our ray tracer implementation,
 	in this case from a deep star map from \cite{deepstarmap-nasa_svs}.
 	The original image was edited just to raise its exposure.}
   \label{fig:starry}
@@ -241,9 +241,25 @@ Interestingly, as observed by Figure ~\ref{fig:omp_weak} decreasing $\varepsilon
 
 \subsection{Educational Value}
 
-
 % TODO: Preferred title here?
-This raytracer was originally developed for educational purposes in the context of Marcelo Ponce's course CSCD71. As a project, it combines physics simulations (both through the use of a raytracer, and through the simulation of gravitational distortion), ODE approximation with GSL, path stenciling, image/file parsing (esp. at large scale), parallel and distributed computing with MPI and OpenMP, domain decomposition, as well as providing a bountiful quantity of variant implementations, while being of low-enough difficulty to be completed in a few weeks (with great difficulty). The result of which is the ability to render pretty images. In particular, the project would provide potential students an excellent opportunity to learn the practical use of GSL/ODE approximation in a realistic context. The impact is felt in 3 areas:
+This ray tracer implementation was originally developed as a final project for
+an upper year specialized topics course in Computer Science, where the main
+elements in the course were the discussion of High-Performance Computing
+techniques.
+As a rich computational project, it combines elments from mutliple disciplines:
+physics simulations (both through the use of a ray tracer, and through the simulation of gravitational distortion),
+solutions to differential equational via approximations with GSL,
+path stenciling, image/file parsing (esp. at large scale),
+parallel and distributed computing with MPI and OpenMP, domain decomposition,
+as well as providing a bountiful quantity of variant implementations,
+while being of relatively low-enough difficulty to be completed in a few weeks.
+Moreover, it has the added value that as a final tangible product is the creation of
+a program which has the ability to render realistcally enhanced images.
+In particular, the project would provide potential students an excellent
+opportunity to learn the practical use of GSL/ODE approximation in a realistic
+context.
+
+The impact is felt in 3 areas:
 
 1. Attempting to set up this particular system is theoretically easy and practically quite difficult. The initial conditions are not obvious. GSL asks for an initial radius, initial angle, and the derivative of the radius with respect to azimuthal angle. Unfortunately, it is not possible to find this derivative without an equation that models the trajectory of light rays, which is the equation we were trying to approximate in the first place! Solving this chicken-and-egg problem is a great educational experience, and forces one to consider more deeply the significance of the parameters given to GSL. 
 % (TODO: mention that debugging is hell?)
@@ -265,6 +281,7 @@ One interesting aspect of this design is it's general applicability. Variations 
 \subsection{Performance Tuning}
 There is plenty of room for optimization on top of this ray tracer. A good place to start is that we could get away with calling into GSL significantly fewer times. When the light ray is far from the black hole, we can assume that the distortion is near zero, and thus, that we can simply compute the ray trajectory using Euclidean geometry. With certain settings, approximately 50\% of the ray tracer's runtime is spent inside GSL. Most of this time could be eliminated, resulting in much better performance. 
 
+\TODO{just add a few words about comparing this approach to "render farming" \& GPU rendeing...}
 
 %\subsection {A better ray tracer}
 %This section could discuss possible improvements made to the ray tracer to get better images, more features, etcs
