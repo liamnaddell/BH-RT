@@ -195,11 +195,6 @@ We believe though, that the main parameters of interest are number of rendered p
     \end{minipage}
 \end{figure*}
 
-\TODO{Some of this needs to be rewritten because MPI beat OMP by about 1/8 speedup consistently}
-\TODO{Also that section earlier on how I praised OMP being faster needs to be rewritten to caveat}
-
-\CMT{if tests were run on Niagara, whay the scaling analysis stops at 16 cores and not 40? -- OR are these results from the Teach cluster instead?}
-
 All the results and analysis presented in this section were obtained
 running our code on the Niagara supercomputer \cite{10.1145/3332186.3332195},
 which is a large homogeneous cluster composed by 2,024 Lenovo SD530 servers
@@ -208,10 +203,9 @@ Each node of the cluster has 188 GiB/202 GB of RAM per node (at least 4 GiB/core
 Being designed for large parallel workloads, it has a fast interconnect consisting of EDR InfiniBand in a Dragonfly+ topology with Adaptive Routing.
 
 
-A surprising result from this analysis is that MPI, despite requiring a copy of much of the pixel data between processes consistently outperforms OMP by a small margin. OMP with 1 thread takes 107 seconds, whereas MPI takes only 94. \TODO{Test with no MPI or no OMP}. 
+The first two figures, ~\ref{fig:mpi_weak2} and ~\ref{fig:omp_weak2} show a weak scaling analysis where we linearly increase the number of pixels rendered (starting at a 303 by 170 pixel image up to a 1920 by 1080 pixel image) and the single-node cores utilized in tandem. We observe that both OpenMP and MPI start at around 145 seconds, and increase logarithmically before plateauing roughly around 170-185 seconds per run. While ideally, we would observe a consistent time which does not increase, these results show relatively stable performance. We also witness OpenMP slightly outperforming MPI, which is expected, since MPI requires copying pixel data between processes. 
 
-
-From Figures ~\ref{fig:omp_weak2} and ~\ref{fig:mpi_weak2}, one can see that, at 16 cores and maximum image width, OpenMP outperforms MPI by around 20 seconds. This is likely explained by the fact that the MPI implementation relies on exchanging pixel data after computations are performed, which is likely to scale poorly with core count. MPI and OpenMP are significantly more competitive at lower core counts.
+We witness something similar with the strong scaling results in figures ~\ref{fig:mpi_strong},~\ref{fig:omp_strong}. These results were run by increasing the number of cores used with a fixed workload. These results show an almost perfect convergence down to the serial fraction with similarly competitive results between OpenMP and MPI. In this case though, MPI slightly outperforms OpenMP as we approach 40 cores, with MPI's time converging to around 10 seconds, and openmp's time converging to around 11.
 
 
 \begin{figure}[h]
@@ -231,10 +225,12 @@ From Figures ~\ref{fig:omp_weak2} and ~\ref{fig:mpi_weak2}, one can see that, at
     \end{minipage}
 \end{figure}
 
-Interestingly, as observed by Figure ~\ref{fig:omp_weak} decreasing $\varepsilon$ results in less time complexity, before increasing required time sharply. An $\varepsilon$ value of about 2-3 results in the best performance.
+From Figure ~\ref{fig:omp_weak}, we can observe an abnormal scaling result. This run was taken by increasing the number of OpenMP threads utilized, while decreasing the simulation $\varepsilon$. We could be observing two phenomena here. For one, we could be witnessing some kind of contention which is not a factor in the 1-25 core range, but which degrades performance after 25 cores. Alternatively we could be witnessing an optimal value of $\varepsilon$, which dominates the performance gain from adding more cores. Because the results from the previous section show good scaling well into the 40 core range, both for weak and strong scaling, it is unlikely that we are observing exponential performance degradation, meaning it is more probable that we have found an optimal $\varepsilon$ value, which is somewhere around 4-2. 
+
+Finally, from Figure ~\ref{fig:mpi_strong_multinode} we see a multi-node run with hybrid utilization of OpenMP and MPI. We set the OpenMP thread count to 4 cores, and scaled the number of nodes between 1 and 4. Notably, these results are quite similar to the single-node scaling runs. At 1 node (4 cores), we complete the job in 94 seconds, with single-node omp completing the run in 84 seconds. At 16 cores across 4 nodes, we complete the task in 25 seconds, with single-node OpenMP requiring 22 seconds. This shows that the Niagara cluster's interconnect is able to keep up with our application's network utilization. 
 
 
-\TODO{M:Remind me: any comments or test on a hybrid, i.e. MPI+OMP approach? If not we can mention it as something to try in the discussion section, L: I added a run for this... limited to 4 nodes because of the trillium upgrades}
+\CMT{M:Remind me: any comments or test on a hybrid, i.e. MPI+OMP approach? If not we can mention it as something to try in the discussion section, L: I added a run for this... limited to 4 nodes because of the trillium upgrades}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -249,16 +245,16 @@ This ray tracer implementation was originally developed as a final project for
 an upper year specialized topics course in Computer Science, where the main
 elements in the course were the discussion of High-Performance Computing
 techniques.
-As a rich computational project, it combines elments from mutliple disciplines:
+As a rich computational project, it combines elments from mutliple disciplines, specifically
 physics simulations (both through the use of a ray tracer, and through the simulation of gravitational distortion),
 solutions to differential equational via approximations with GSL,
 path stenciling, image/file parsing,
-parallel and distributed computing with MPI and OpenMP, domain decomposition,
+parallel and distributed computing with MPI and OpenMP, and domain decomposition,
 as well as providing a bountiful quantity of variant implementations,
 while being of relatively low-enough difficulty to be completed in a few weeks.
 Moreover, it has the added value of being a 
-program which is able to render realistc images.
-In particular, the project would provide potential students an excellent opportunity to learn the practical use of GSL/ODE approximation in a realistic context. The impact is felt in 3 areas:
+program which is able to render realistic images.
+In particular, the project would provide potential students an excellent opportunity to learn the practical use of GSL/ODE approximation in a realistic context.
 
 The impact is felt in 3 areas:
 
@@ -282,20 +278,19 @@ There is plenty of room for optimization on top of this ray tracer. A good place
 
 
 Another aspect of this implementation worth highlighting is its tight bottom-up parallel integration.
-I.e. either in the form of shared-memory or distributed-memory parallelism, such implementation
+both in shared-memory and distributed-memory parallelism. Such implementation
 allows for well-integrated and optimized scaling to run the ray tracer in larger problems.
-This is a substantial much solid and potentially better scalable solution than other ones
-where \textit{farm rendering}\CMT{L:I don't understand what a farming rendering from reading this alone is?} approaches are used \cite{10.1145/3528223.3530171,app112412046}.
+This is a substantially more solid and potentially better scalable solution than other ones
+where \textit{farm rendering} approaches are used \cite{10.1145/3528223.3530171,app112412046}.
 Moreover the latter approaches would be only useful in cases of \textit{embarassignly parallel}
 tasks (e.g. by splitting images or partioning independent data/field-views),
-and even in those case it would be questionable the preparation work done required in order to
-prepare, administrate, and recombine these results.
+and even in those case it would be questionable whether or not the preparation work done required in 
+order to prepare, administrate, and recombine these results is worth the cost.
 Of course, we should not forget implementations employing \textit{GPU rendering}, for which
 these devices and implementations are the most well-suited to be used \cite{Peddie2019_hardware}.
-But as argued at the beggining of this work, those would be considered specialized devices
-and even the corresponding implementations are tailored and fine-tuned for such a hardware.
-Not arguably, these would be the ones offering the best performing and scaling results.
-
+But as argued at the beginning of this work, those would be considered specialized devices
+and even the corresponding implementations are tailored and fine-tuned to the specific hardware,
+the benefit of which is best-in-class performance and scaling.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
