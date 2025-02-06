@@ -20,7 +20,8 @@ In these cases, ray-tracing techniques have been applied to
 General Relativistic Magneto-HydroDynamics simulations in order to produce 
 the so-called fiducial templated models of the event horizon images.
 These techniques have allowed us to produce images that have captivated the minds and interest of millions.
-After establishing the theory and equations for describing the trajectories of light rays around a black hole, it is natural to try to use a ray tracer to render a scene within this geometry which ultimately results in a particular distortion applied to the general techniques.
+%Liam: This sentence ruins the flow.
+%After establishing the theory and equations for describing the trajectories of light rays around a black hole, it is natural to try to use a ray tracer to render a scene within this geometry which ultimately results in a particular distortion applied to the general techniques.
 
 We should emphasize that there exist a large variety of ray tracer implementations already 
 \cite{imbens2023graphicalprocessinggeodesicpropagation,10.2312/EGPGV/EGPGV12/051-060,7539599_OSPRay}
@@ -92,7 +93,7 @@ Image and scene handling was done both with JPEG and with PPM support.
 For JPEG support, the Boost's Generic Image Library
 \cite{schaling_boost,bourdev2007generic} (and consequently libjpeg) was used, and for PPM support, a custom parser was written. Both of these parsers rely on loading the entire image into memory, which has the advantage of quick pixel access, at the cost of potentially loading a lot of unused pixel data into memory. For moderately sized images, this is an appropriate tradeoff, however, for very large astronomical images, this could quickly become a problem, especially as the size of an image (Plus whatever memory is needed for rendering) eclipses the available RAM. To deal with this, future implementations could apply a number of techniques:
 1. Refuse to load the image into memory, instead relying on an `fseek+fread` style implementation, which is likely to perform well on SSD storage, but poorly over the network.
-2. Decompose the image, and have each process store a portion in memory, at the cost of having to exchange pixels when a light ray "misses" our portion of the image. This strategy, if poorly optimized, could result in horrible performance, as it's quite difficult to predict the trajectories of an arbitrary light ray in advance, meaning we are likely to miss our loaded portion of the image. This could easily yield a network bottleneck.
+2. Decompose the image, and have each process store a portion in memory, at the cost of having to exchange pixels when a light ray "misses" our portion of the image. This strategy, if poorly optimized, could result in horrible performance, as it is quite difficult to predict the trajectories of an arbitrary light ray in advance, meaning we are likely to miss our loaded portion of the image. This could easily yield a network bottleneck.
 3. Load portions of the image that are relevant to our render only. This is somewhat of a balance of the previous two approaches, at the cost of additional complexity. 
 
 
@@ -109,13 +110,8 @@ Additionally, as shown in Sec.~\ref{sec:results}, OpenMP threads scale significa
 
 \subsection{Code Availability}
 Based on all the elements described in the previous sections,
-we developed our source code in C++ which is available in the following
-GitHub repository:
-	\url{https://github.com/liamnaddell/BHRaytracer}
-
-\TODO{We may want to emphasize that this an open source code under \textbf{which license?}}
-
-\TODO{Also any details about the code implementation we may want to highlight here?}
+we developed our source code in C++ which is available under GPL-v2 in the following
+GitHub repository: \url{https://github.com/liamnaddell/BHRaytracer}. The project was developed in a modular fashion, following best practices. Further details and technical documentation can be found in the repository.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -127,7 +123,7 @@ GitHub repository:
 \subsection{A selection of renders}
 
 This section includes results of images rendered employing our ray tracer's implementation.
-The background images for these renders were taken from NASA's Scientific Visualization Studio (\url{https://svs.gsfc.nasa.gov/}).
+The background images for these renders were taken from NASA's Scientific Visualization Studio and the ESA/Nasa Hubble Mission.
 We present two images -- Figs.~\ref{fig:eagle} and \ref{fig:starry}, it is easy to see the effects of gravitational lensing, as well as the clear Einstein ring. 
 
 
@@ -164,9 +160,9 @@ For performing a weak scaling analysis, additionally it would be required to add
 When increasing the size of the background image, we estimate that this increases the time spent outside the parallel region, as the background image has to be parsed by each process, which is likely to take the same amount of time per node.
 As such, we consider that this does not present significant interest for scaling analysis.
 
-However, decreasing $\varepsilon$ is an interesting scaling parameter, as it is responsible for some of the fidelity of a rendered image. The challenge is that it is hard to be sure how decreasing/increasing $\varepsilon$ will impact the amount of time needed for a GSL call, which by itself could be an interesting study case already.
+However, decreasing $\varepsilon$ is an interesting scaling parameter, as it is responsible for some of the fidelity of a rendered image. The challenge is that it is hard to be sure how decreasing/increasing $\varepsilon$ will impact the amount of time needed for a GSL call, which by itself could be an interesting topic of study.
 
-We consider though, that the main parameters of interest are number of rendered pixels, and the number of cores used (across both multiple nodes and single nodes). For testing this kind of scaling without increasing the number of pixels in the scene, antialiasing level could be turned up.
+We consider though, that the main parameters of interest are number of rendered pixels, and the number of cores used (across both multiple nodes and single nodes). This was chosen because the number of rendered pixels corresponds very closely to the amount of total work required to render a scene.
 
 \begin{figure*}[h]
   \centering
@@ -206,7 +202,7 @@ Each node of the cluster has 188 GiB/202 GB of RAM per node (at least 4 GiB/core
 Being designed for large parallel workloads, it has a fast interconnect consisting of EDR InfiniBand in a Dragonfly+ topology with Adaptive Routing.
 
 
-Figs.~\ref{fig:mpi_weak2} and ~\ref{fig:omp_weak2}, show a weak scaling analysis where we linearly increase the number of pixels rendered (starting at a 303 by 170 pixel image up to a 1920 by 1080 pixel image) and the single-node cores utilized in tandem. We observe that both OpenMP and MPI start at around 145 seconds, and increase logarithmically before plateauing roughly around 170-185 seconds per run. While ideally, we would observe a consistent time which does not increase, these results show relatively stable performance. We also witness OpenMP slightly outperforming MPI, which is expected, since MPI requires transferring pixel's data between processes. 
+Figs.~\ref{fig:mpi_weak2} and ~\ref{fig:omp_weak2}, show a weak scaling analysis where we linearly increase the number of pixels rendered (starting at a 303 by 170 pixel image up to a 1920 by 1080 pixel image) and the single-node cores utilized in tandem. We observe that both OpenMP and MPI start at around 145 seconds, and increase logarithmically before plateauing roughly around 170-185 seconds per run. While ideally, we would observe a consistent time which does not increase, these results show relatively stable performance. We also witness OpenMP slightly outperforming MPI, which is expected, since MPI requires transferring pixel data between processes. 
 
 We observe something similar with the strong scaling results in Figs.~\ref{fig:mpi_strong} and ~\ref{fig:omp_strong}. These results were run by increasing the number of cores used with a fixed workload. These results show an almost perfect convergence down to the serial fraction with similarly competitive results between OpenMP and MPI. In this case though, MPI slightly outperforms OpenMP as we approach 40 cores, with MPI's time converging to around 10 seconds, and OpenMP's time converging to around 11 seconds.
 
@@ -228,9 +224,9 @@ We observe something similar with the strong scaling results in Figs.~\ref{fig:m
     \end{minipage}
 \end{figure}
 
-\CMT{Are Figs.~\ref{fig:omp_weak} and \ref{fig:mpi_strong_multinode} the scaling analysis for the hybrid code? It looks like that, so we also need to specify this then...}
+\CMT{M:Are Figs.~\ref{fig:omp_weak} and \ref{fig:mpi_strong_multinode} the scaling analysis for the hybrid code? It looks like that, so we also need to specify this then... L: I specify in the paragraph below the figure. If I specify in the figure it ruins the alignment}
 
-From Fig.~\ref{fig:omp_weak}, we can observe an abnormal scaling result. This run was taken by increasing the number of OpenMP threads utilized, while decreasing the simulation $\varepsilon$. We could be observing two phenomena here. For one, we could be witnessing some kind of contention which is not a factor in the 1-25 core range, but which degrades performance after 25 cores. Alternatively we could be witnessing an optimal value of $\varepsilon$, which dominates the performance gain from adding more cores. Because the results from the previous section show good scaling well into the 40 core range, both for weak and strong scaling, it is unlikely that we are observing exponential performance degradation, meaning it is more probable that we have found an optimal $\varepsilon$ value, which is somewhere around 4-2. 
+From Fig.~\ref{fig:omp_weak}, we can observe an abnormal scaling result. This run was taken by increasing the number of OpenMP threads utilized on a single node, while decreasing the simulation $\varepsilon$. We could be observing two phenomena here. For one, we could be witnessing some kind of contention which is not a factor in the 1-25 core range, but which degrades performance after 25 cores. Alternatively we could be witnessing an optimal value of $\varepsilon$, which dominates the performance gain from adding more cores. Because the results from the previous section show good scaling well into the 40 core range, both for weak and strong scaling, it is unlikely that we are observing exponential performance degradation, meaning it is more probable that we have found an optimal $\varepsilon$ value, which is somewhere around 4-2. 
 
 Finally, from Figure ~\ref{fig:mpi_strong_multinode} we see a multi-node run with hybrid utilization of OpenMP and MPI. We set the OpenMP thread count to 4 cores, and scaled the number of nodes between 1 and 4. Notably, these results are quite similar to the single-node scaling runs. At 1 node (4 cores), we complete the job in 94 seconds, with single-node OpenMP completing the run in 84 seconds. At 16 cores across 4 nodes, we complete the task in 25 seconds, with single-node OpenMP requiring 22 seconds. This shows that the Niagara cluster's interconnect is able to keep up with our application's network utilization. 
 
@@ -296,7 +292,7 @@ Of course, we should not forget implementations employing \textit{GPU rendering}
 these devices and implementations are the most well-suited to be used \cite{Peddie2019_hardware}.
 But as argued at the beginning of this work, those would be considered specialized devices
 and even the corresponding implementations are tailored and fine-tuned to the specific hardware,
-the benefit of which is best-in-class performance and scaling.
+which might be an acceptable tradeoff for those looking for best-in-class performance.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -306,8 +302,8 @@ the benefit of which is best-in-class performance and scaling.
 
 Gravitational lensing is a beautiful phenomenon, both when witnessed from space, and when digitally rendered.
 This paper explored a relatively simple method for creating a ray traced image which shows gravitational lensing, and how to accelerate the process using shared and distributed memory computing.
-Moreover one may argue that the ray-tracing problem has been solved, may be even, too many times.
+Moreover one may argue that the ray-tracing problem has been solved, maybe even too many times.
 However, taking a start-from-scratch approach, can be useful to highlight important and fundamental aspects of the basic techniques and implementations used.
-Furthermore an approach as this, offers multiple and profound opportunities in the areas of teaching and education, both with regards to general scientific computing techniques, as well as, High-Performance Computing techniques.
+Furthermore an approach as this, offers multiple profound opportunities in the areas of teaching and education, both with regards to general scientific computing techniques as well as High-Performance Computing techniques.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
