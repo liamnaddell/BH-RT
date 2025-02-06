@@ -1,4 +1,4 @@
-\TODO{L: I need to spelcheck at some point}
+\TODO{L: I need to spellcheck at some point}
 \TODO{L: Regenerate the renders}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -6,7 +6,7 @@
 \label{sec:intro}
 
 
-Raytracing is a foundational technique in computer graphics, which can be used
+Ray tracing is a foundational technique in computer graphics, which can be used
 to render photorealistic scenes.
 A good introduction to the main techniques and practical implementations can be found
 in Ref.\cite{raytracing_in_one_weekend}.
@@ -72,7 +72,7 @@ As for how to compute these segments, the GNU Scientific Library's (GSL) suite \
 
 \subsection{Ensuring even spacing of computed points}
 To compute the next point on a light ray $\varepsilon$ distance away, we would compute, using the Euclidean metric, the light ray's path with no distortion. In spherical coordinates, this allows us to compute the azimuthal angle from the black hole's origin. We can feed this updated azimuthal angle into GSL, and it will return the distance of the ray from the origin of the black hole. In effect, GSL behaves as a function from azimuthal angle to distance, allowing us to compute the needed points in 2D space.
-Fig~\ref{fig:nextpoint} despites an example of how these paths are computed.
+Fig~\ref{fig:nextpoint} depicts an example of how these paths are computed.
 
 \begin{figure}[h]
   \centering
@@ -149,7 +149,7 @@ We present two images -- Figs.~\ref{fig:eagle} and \ref{fig:starry}, it is easy 
 
 \subsection{Scaling analysis}
 
-In this type of problems, it is possible to consider different \textit{metrics} to analyze the scaling behaviou of a given implementation.
+In this type of problems, it is possible to consider different \textit{metrics} to analyze the scaling behavior of a given implementation.
 For instance, one could consider increasing the size of the background image to stress image parsing;
 or instead increase the number of rendered pixels;
 or decrease $\varepsilon$ yielding to more calls into GSL;
@@ -174,7 +174,7 @@ We consider though, that the main parameters of interest are number of rendered 
   \hspace{.05\linewidth}
   \begin{minipage}{0.45\linewidth}
       \includegraphics[width=\linewidth]{figs/omp_weak2.out}
-      \caption{Weak scaling analysis where OMP threads utilized and image width are increased in tandem}
+      \caption{Weak scaling analysis where OpenMP threads utilized and image width are increased in tandem}
 	  \Description{As core count and image width increase linearly, time increases linearly }
         \label{fig:omp_weak2}
     \end{minipage}
@@ -188,7 +188,7 @@ We consider though, that the main parameters of interest are number of rendered 
  \begin{minipage}{0.45\linewidth}
   \includegraphics[width=\linewidth]{figs/omp_strong.out}
   \caption{Strong scaling analysis with OpenMP threads -- OpenMP is slightly faster}
-    \Description{Weak scaling analysis relating mpi process count, time required for computation, and image width}
+    \Description{Weak scaling analysis relating MPI process count, time required for computation, and image width}
     \label{fig:omp_strong}
     \end{minipage}
 \end{figure*}
@@ -201,24 +201,24 @@ Each node of the cluster has 188 GiB/202 GB of RAM per node (at least 4 GiB/core
 Being designed for large parallel workloads, it has a fast interconnect consisting of EDR InfiniBand in a Dragonfly+ topology with Adaptive Routing.
 
 
-Figs.~\ref{fig:mpi_weak2} and ~\ref{fig:omp_weak2}, show a weak scaling analysis where we linearly increase the number of pixels rendered (starting at a 303 by 170 pixel image up to a 1920 by 1080 pixel image) and the single-node cores utilized in tandem. We observe that both OpenMP and MPI start at around 145 seconds, and increase logarithmically before plateauing roughly around 170-185 seconds per run. While ideally, we would observe a consistent time which does not increase, these results show relatively stable performance. We also witness OpenMP slightly outperforming MPI, which is expected, since MPI requires transfering pixel's data between processes. 
+Figs.~\ref{fig:mpi_weak2} and ~\ref{fig:omp_weak2}, show a weak scaling analysis where we linearly increase the number of pixels rendered (starting at a 303 by 170 pixel image up to a 1920 by 1080 pixel image) and the single-node cores utilized in tandem. We observe that both OpenMP and MPI start at around 145 seconds, and increase logarithmically before plateauing roughly around 170-185 seconds per run. While ideally, we would observe a consistent time which does not increase, these results show relatively stable performance. We also witness OpenMP slightly outperforming MPI, which is expected, since MPI requires transferring pixel's data between processes. 
 
-We observe something similar with the strong scaling results in Figs.~\ref{fig:mpi_strong} and ~\ref{fig:omp_strong}. These results were run by increasing the number of cores used with a fixed workload. These results show an almost perfect convergence down to the serial fraction with similarly competitive results between OpenMP and MPI. In this case though, MPI slightly outperforms OpenMP as we approach 40 cores, with MPI's time converging to around 10 seconds, and openmp's time converging to around 11 seconds.
+We observe something similar with the strong scaling results in Figs.~\ref{fig:mpi_strong} and ~\ref{fig:omp_strong}. These results were run by increasing the number of cores used with a fixed workload. These results show an almost perfect convergence down to the serial fraction with similarly competitive results between OpenMP and MPI. In this case though, MPI slightly outperforms OpenMP as we approach 40 cores, with MPI's time converging to around 10 seconds, and OpenMP's time converging to around 11 seconds.
 
 
 \begin{figure}[h]
   \centering
   \begin{minipage}{0.45\linewidth}
   \includegraphics[width=\linewidth]{figs/omp_weak.out}
-	\caption{Weak scaling analysis -- OMP thread count is increased and $\varepsilon$ is decreased in tandem}
-    \Description{Weak scaling analysis relating OMP thread count, time required for computation, and $\varepsilon$ value.}
+	\caption{Weak scaling analysis -- OpenMP thread count is increased and $\varepsilon$ is decreased in tandem}
+    \Description{Weak scaling analysis relating OpenMP thread count, time required for computation, and $\varepsilon$ value.}
     \label{fig:omp_weak}
   \end{minipage}
   \hspace{.05\linewidth}
  \begin{minipage}{0.45\linewidth}
   \includegraphics[width=\linewidth]{figs/mpi_strong_multinode.out}
-  \caption{Multi-node run with 4 omp threads per node}
-    \Description{Weak scaling analysis relating mpi process count, time required for computation, and image width}
+  \caption{Multi-node run with 4 OpenMP threads per node}
+    \Description{Weak scaling analysis relating MPI process count, time required for computation, and image width}
     \label{fig:mpi_strong_multinode}
     \end{minipage}
 \end{figure}
@@ -227,10 +227,10 @@ We observe something similar with the strong scaling results in Figs.~\ref{fig:m
 
 From Fig.~\ref{fig:omp_weak}, we can observe an abnormal scaling result. This run was taken by increasing the number of OpenMP threads utilized, while decreasing the simulation $\varepsilon$. We could be observing two phenomena here. For one, we could be witnessing some kind of contention which is not a factor in the 1-25 core range, but which degrades performance after 25 cores. Alternatively we could be witnessing an optimal value of $\varepsilon$, which dominates the performance gain from adding more cores. Because the results from the previous section show good scaling well into the 40 core range, both for weak and strong scaling, it is unlikely that we are observing exponential performance degradation, meaning it is more probable that we have found an optimal $\varepsilon$ value, which is somewhere around 4-2. 
 
-Finally, from Figure ~\ref{fig:mpi_strong_multinode} we see a multi-node run with hybrid utilization of OpenMP and MPI. We set the OpenMP thread count to 4 cores, and scaled the number of nodes between 1 and 4. Notably, these results are quite similar to the single-node scaling runs. At 1 node (4 cores), we complete the job in 94 seconds, with single-node omp completing the run in 84 seconds. At 16 cores across 4 nodes, we complete the task in 25 seconds, with single-node OpenMP requiring 22 seconds. This shows that the Niagara cluster's interconnect is able to keep up with our application's network utilization. 
+Finally, from Figure ~\ref{fig:mpi_strong_multinode} we see a multi-node run with hybrid utilization of OpenMP and MPI. We set the OpenMP thread count to 4 cores, and scaled the number of nodes between 1 and 4. Notably, these results are quite similar to the single-node scaling runs. At 1 node (4 cores), we complete the job in 94 seconds, with single-node OpenMP completing the run in 84 seconds. At 16 cores across 4 nodes, we complete the task in 25 seconds, with single-node OpenMP requiring 22 seconds. This shows that the Niagara cluster's interconnect is able to keep up with our application's network utilization. 
 
 
-\CMT{M:Remind me: any comments or test on a hybrid, i.e. MPI+OMP approach? If not we can mention it as something to try in the discussion section, L: I added a run for this... limited to 4 nodes because of the trillium upgrades}
+\CMT{M:Remind me: any comments or test on a hybrid, i.e. MPI+OpenMP approach? If not we can mention it as something to try in the discussion section, L: I added a run for this... limited to 4 nodes because of the trillium upgrades}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -245,9 +245,9 @@ This ray tracer implementation was originally developed as a final project for
 an upper year specialized topics course in Computer Science, where the main
 elements in the course were the discussion of High-Performance Computing
 techniques.
-As a rich computational project, it combines elements from mutliple disciplines, specifically
+As a rich computational project, it combines elements from multiple disciplines, specifically
 physics simulations (both through the use of a ray tracer, and through the simulation of gravitational distortion),
-solutions to differential equational via approximations with GSL,
+solutions to differential equations via approximations with GSL,
 path stenciling, image/file parsing,
 parallel and distributed computing with MPI and OpenMP, and domain decomposition,
 as well as providing a bountiful quantity of variant implementations,
@@ -282,7 +282,7 @@ both in shared-memory and distributed-memory parallelism. Such implementation
 allows for well-integrated and optimized scaling to run the ray tracer in larger problems.
 This is a substantially more solid and potentially better scalable solution than other ones
 where \textit{farm rendering} approaches are used \cite{10.1145/3528223.3530171,app112412046}.
-Moreover the latter approaches would be only useful in cases of \textit{embarassignly parallel}
+Moreover the latter approaches would be only useful in cases of \textit{embarrassingly parallel}
 tasks (e.g. by splitting images or partioning independent data/field-views),
 and even in those case it would be questionable whether or not the preparation work done required in 
 order to prepare, administrate, and recombine these results is worth the cost.
