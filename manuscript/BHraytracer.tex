@@ -154,7 +154,7 @@ For instance, one could consider increasing the size of the background image to 
 or instead increase the number of rendered pixels;
 or decrease $\varepsilon$ yielding to more calls into GSL;
 or increase samples-per-pixel which controls antialiasing.
-For performing a weak scaling analysis, additionally it would be required to add more "workng units", i.e. nodes or cores depending on the implementation.
+For performing a weak scaling analysis, additionally it would be required to add more "working units", i.e. nodes or cores depending on the implementation.
 
 When increasing the size of the background image, we estimate that this increases the time spent outside the parallel region, as the background image has to be parsed by each process, which is likely to take the same amount of time per node.
 As such, we consider that this does not present significant interest for scaling analysis.
@@ -223,7 +223,7 @@ We observe something similar with the strong scaling results in Figs.~\ref{fig:m
     \end{minipage}
 \end{figure}
 
-\CMT{Are Figs.~\ref{fig:omp_weak} and \ref{fig:mpi_strong} the scaling analysis for the hybrid code? It looks like that, so we also need to specify this then...}
+\CMT{Are Figs.~\ref{fig:omp_weak} and \ref{fig:mpi_strong_multinode} the scaling analysis for the hybrid code? It looks like that, so we also need to specify this then...}
 
 From Fig.~\ref{fig:omp_weak}, we can observe an abnormal scaling result. This run was taken by increasing the number of OpenMP threads utilized, while decreasing the simulation $\varepsilon$. We could be observing two phenomena here. For one, we could be witnessing some kind of contention which is not a factor in the 1-25 core range, but which degrades performance after 25 cores. Alternatively we could be witnessing an optimal value of $\varepsilon$, which dominates the performance gain from adding more cores. Because the results from the previous section show good scaling well into the 40 core range, both for weak and strong scaling, it is unlikely that we are observing exponential performance degradation, meaning it is more probable that we have found an optimal $\varepsilon$ value, which is somewhere around 4-2. 
 
@@ -298,7 +298,10 @@ the benefit of which is best-in-class performance and scaling.
 \section{Conclusions}
 \label{sec:concl}
 
-Gravitational lensing is a beautiful phenomenon, both when witnessed from space, and when digitally rendered. This paper explored a relatively simple method for creating a ray traced image which shows gravitational lensing, and how to accelerate the process using shared and distributed memory computing. Additionally, these types of projects lend themselves well to teaching and education, both with regards to general scientific computing techniques, and to HPC techniques.
-
+Gravitational lensing is a beautiful phenomenon, both when witnessed from space, and when digitally rendered.
+This paper explored a relatively simple method for creating a ray traced image which shows gravitational lensing, and how to accelerate the process using shared and distributed memory computing.
+Moreover one may argue that the ray-tracing problem has been solved, may be even, too many times.
+However, taking a start-from-scratch approach, can be useful to highlight important and fundamental aspects of the basic techniques and implementations used.
+Furthermore an approach as this, offers multiple and profound opportunities in the areas of teaching and education, both with regards to general scientific computing techniques, as well as, High-Performance Computing techniques.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
