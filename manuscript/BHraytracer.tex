@@ -1,4 +1,5 @@
-
+\TODO{L: I need to spelcheck at some point}
+\TODO{L: Regenerate the renders}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Introduction}
@@ -13,27 +14,27 @@ In general this implies expensive processes and requires the corresponding appro
 as well as complex and sophisticated algorithms.
 Their applications \cite{Peddie2019_appns} range from generation of high-quality realistic visualizations to
 rendering of movies or animations, and up to even more exotic images of black holes,
-such as the ones remarkably done for black hole residing at the center of the galaxy M87 \cite{M87_EHT_i}
+such as the ones remarkably done for the black hole residing at the center of the galaxy M87 \cite{M87_EHT_i}
 and the supermassive black hole Sagittarius A* at the center of our own galaxy \cite{SagA_EHT_i}.
 In these cases, ray-tracing techniques have been applied to
 General Relativistic Magneto-HydroDynamics simulations in order to produce 
 the so-called fiducial templated models of the event horizon images.
-Images like these have captivated the minds and interest of millions.
-Since we have well established the theory and equations for describing the trajectories of light rays around a black hole, it is natural to try to use a ray tracer to render a scene within this geometry which ultimately results in a particular distortion applied to the general techniques.
+These techniques have allowed us to produce images that have captivated the minds and interest of millions.
+After establishing the theory and equations for describing the trajectories of light rays around a black hole, it is natural to try to use a ray tracer to render a scene within this geometry which ultimately results in a particular distortion applied to the general techniques.
 
 We should emphasize that there exist a large variety of ray tracer implementations already 
 \cite{imbens2023graphicalprocessinggeodesicpropagation,10.2312/EGPGV/EGPGV12/051-060,7539599_OSPRay}
-and even with direct astrophysical applications such as the rendering of black hole surroundings
+and even ones with direct astrophysical applications such as the rendering of black hole surroundings
 \cite{10.2312:vmv.20221208,sharma2023mahakalapythonbasedmodularraytracing,James_2015}.
 However, our approach seeks to highlight some specific features:
 i) its open-source implementation;
 ii) the minimalistic and simplistic implementation strategy, i.e. by tackling
 mostly the actual mathematical problem using specialized libraries
 to solve the governing differential equation of the problem;
-iii) the proximity \CMT{Liam: I'm not sure what is meant by this?} to implement this in a fairly efficient and high-performing
+iii) the ease of implementation \CMT{Liam: I'm not sure what is meant by this? I changed it to be more clear to me?} in a fairly efficient and high-performing
 way by employing standards in shared-memory and distributed-memory paradigms;
 and iv) the hardware agnostic approach, i.e. not depending on specialized hardware, accelerators or GPUs \cite{Peddie2019_hardware}
-which one could argue would be much better suited for tackling this type of problems.
+which one could argue would be better suited for tackling this type of problems.
 
 In order to model a simple black hole scenario, we can use the Schwarzschild metric \cite{schw_soln-2007}.
 This models black holes which, among other properties, are non-spinning and not charged,
@@ -44,25 +45,16 @@ It has been well established \cite{gravitation-mtw} that the equation,
 	\label{eq:Sch-light-ray}
 \end{equation}
 relates the trajectory of a light ray to the mass $M$ of a black hole, from the Schwarzschild metric;
-where $u$ represents $1/r$, being $r$ the Euclidean distance of a point on the light ray to the black hole center.
+where $u$ represents $1/r$, $r$ being the Euclidean distance of a point on the light ray to the black hole center.
 $u$ is differentiated with respect to $\phi$, the azimuthal angle between the point and the black hole origin.
-See Fig.~\ref{fig:one} and its accompanying section for more detail on the geometry of this equation.
+See Fig.~\ref{fig:nextpoint} and its accompanying section for more detail on the geometry of this equation.
 After providing initial conditions,  it is possible to solve Eq.(\ref{eq:Sch-light-ray}) and trace the entire trajectory of the ray with high fidelity.
 Notably, this equation is modeled in 2D-spherical coordinates, meaning, if we want to use this equation to analyze light rays in 3D space, we need to find a way to find an equivalent ray that our equation models, and use the 2D ray to find the 3D ray's trajectory.
 
-After being able to compute the trajectory of individual rays, we can use these rays to generate a full image using ray tracing. Ray tracers render a simulated scene by casting light rays from a simulated camera, and computing what objects in the scene would be visible to that ray. If a particular camera would produce an image of let's say $1920 \times 1080$ pixels, we could build the image that camera would record by casting a light ray through each pixel. Because ray tracing's unit of perception is how simulated light rays interact with a simulated scene, it is a natural choice for simulations which involve the bending or distortion of light.
+After being able to compute the trajectory of individual rays, we can use these rays to generate a full image using ray tracing. Ray tracers render a simulated scene by casting light rays from a simulated camera, and computing what objects in the scene would be visible to that ray. Hypothetically, if a particular camera would produce an image of $1920 \times 1080$ pixels, we could build the image that camera would record by casting a light ray through each pixel. Because ray tracing's unit of perception is how simulated light rays interact with a simulated scene, it is a natural choice for simulations which involve the bending or distortion of light.
 
-%\CMT{Some discussion of other papers can be made here}
-
-%\CMT{Can improve flow here}
-%This paper is organized as follows:
-%in Sec.~\ref{sec:intro} we present the physical problem of tracing rays of light in the presence of a black hole;
-%in Sec.~\ref{sec:impl} we describe the methods implemented and used to tackle this problem;
-%in Sec.~\ref{sec:results} we discuss our results and compare to other related works;
-%and finally in Sec.~\ref{sec:disc} and ~\ref{sec:concl} we present our findings and comment
-%on possible future extensions to this work.
-
-Having given an introduction in Sec.~\ref{sec:intro} to the problem, we will proceed in Sec.~\ref{sec:impl} to describe our implementation approach, followed by results in  Sec.~\ref{sec:results} and a discussion in Sec.~\ref{sec:disc} and ~\ref{sec:concl}.
+%NOTE: Liam: I don't like this section since it breaks up the flow of the previous paragraph to the next
+%Having given an introduction in Sec.~\ref{sec:intro} to the problem, we will proceed in Sec.~\ref{sec:impl} to describe our implementation approach, followed by results in  Sec.~\ref{sec:results} and a discussion in Sec.~\ref{sec:disc} and ~\ref{sec:concl}.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -76,7 +68,7 @@ While the fundamental idea of taking a ray tracer and modifying it so that light
 
 
 \subsection{Using GSL for ODE approximation}
-As for how to compute these segments, the GNU Scientific Library's (GSL) suite \cite{10.5555/1538674} of ODE approximation tools found significant utility. GSL allows us to define our equations as C functions, and our particular ray by a set of initial conditions. From there, we can use GSL to compute a series of discrete points on the ray governed by a timestep of our choosing. For initial conditions, we need to describe,in 2D spherical coordinates, an initial point on the ray and a single successor point, which was computed using the linear direction, as we are casting rays far from the black hole's influence. As for the \textit{timestep} (as it is commonly known in the GSL documentation), we allowed program users to control the distance between computed points, which we will refer to as $\varepsilon$, i.e. the \textit{discretization} or \textit{step} of the simulation. Lower values of $\varepsilon$ result in more accurate trajectories, but also require more computed points. 
+As for how to compute these segments, the GNU Scientific Library's (GSL) suite \cite{10.5555/1538674} of ODE approximation tools found significant utility. GSL allows us to define our equations as C functions, and our particular ray by a set of initial conditions. From there, we can use GSL to compute a series of discrete points on the ray governed by a timestep of our choosing. For initial conditions, we need to describe, in 2D spherical coordinates, an initial point on the ray and a single successor point, which was computed using the linear direction, as we are casting rays far from the black hole's influence. As for the \textit{timestep} (as it is commonly known in the GSL documentation), we allowed program users to control the distance between computed points, which we will refer to as $\varepsilon$, i.e. the \textit{discretization} or \textit{step} of the simulation. Lower values of $\varepsilon$ result in more accurate trajectories, but also require more computed points. 
 
 \subsection{Ensuring even spacing of computed points}
 To compute the next point on a light ray $\varepsilon$ distance away, we would compute, using the Euclidean metric, the light ray's path with no distortion. In spherical coordinates, this allows us to compute the azimuthal angle from the black hole's origin. We can feed this updated azimuthal angle into GSL, and it will return the distance of the ray from the origin of the black hole. In effect, GSL behaves as a function from azimuthal angle to distance, allowing us to compute the needed points in 2D space.
@@ -117,9 +109,9 @@ Additionally, as shown in Sec.~\ref{sec:results}, OpenMP threads scale significa
 
 \subsection{Code Availability}
 Based on all the elements described in the previous sections,
-we developed an open source code in C which is available in the following
-GitHub repository
-	\TODO{add repo}
+we developed our source code in C++ which is available in the following
+GitHub repository: (\url{https://github.com/liamnaddell/BHRaytracer})
+\TODO{Should this be a \\href ?  I think it would be visually more appealing}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -264,9 +256,9 @@ The impact is felt in 3 areas:
 
 3. The problem of relating the 2D ray-trajectory equation to a 3D scene has no readily available solutions. As such, it challenges potential students to think deeply about the problem, and to come up with original solutions.
 
-Beyond the challenges associated with GSL, this project's requirement of parallel image processing provides an opportunity to learn how to process, parse, and generate large images in parallel. In particular, handling the case where the total handled image size is larger than system memory can yield many variant implementations with considerable performance differences and technical complexity. 
+Beyond the challenges associated with GSL, this project's requirement of parallel image processing provides an opportunity to learn how to process, parse, and generate large images in parallel. In particular, if one chooses to handle the case where the total handled image size is larger than system memory, then many variant implementations with considerable performance differences and technical complexity can be generated. 
 
-Finally, this project provides an opportunity to practice domain decomposition techniques in a practical setting. Splitting and dividng work in the way domain decomposition requires is not often encountered in typical Computer Science education, so it is beneficial to provide more examples.
+Finally, this project provides an opportunity to practice domain decomposition techniques in a practical setting. Splitting and dividing work in the way domain decomposition requires is not often encountered in typical Computer Science education, so it is beneficial to provide more examples.
 
 
 \subsection{General Applicability}
