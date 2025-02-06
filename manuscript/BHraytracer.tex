@@ -233,6 +233,7 @@ From Fig.~\ref{fig:omp_weak}, we can observe an abnormal scaling result. This ru
 
 Finally, from Figure ~\ref{fig:mpi_strong_multinode} we see a multi-node run with hybrid utilization of OpenMP and MPI. We set the OpenMP thread count to 4 cores, and scaled the number of nodes between 1 and 4. Notably, these results are quite similar to the single-node scaling runs. At 1 node (4 cores), we complete the job in 94 seconds, with single-node OpenMP completing the run in 84 seconds. At 16 cores across 4 nodes, we complete the task in 25 seconds, with single-node OpenMP requiring 22 seconds. This shows that the Niagara cluster's interconnect is able to keep up with our application's network utilization. 
 
+\TODO{Another thing it would be interesting to consider, not sure if you have data about this, would be to monitor memory utilization,  i.e. some sort of memory profiling... if you have the jobs numbers this infroation may already be avaialble at  https://my.scinet.utoronto.ca/ -- you just need to log in with your scinet credentials and search for your jobs -- there are even some graphs you could just extract from there...}
 
 \CMT{M:Remind me: any comments or test on a hybrid, i.e. MPI+OpenMP approach? If not we can mention it as something to try in the discussion section, L: I added a run for this... limited to 4 nodes because of the trillium upgrades}
 
