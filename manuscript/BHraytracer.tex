@@ -32,7 +32,7 @@ to solve the governing differential equation of the problem;
 iii) the ease of implementation in a fairly efficient and high-performing
 way by employing standards in shared-memory and distributed-memory paradigms;
 and iv) the hardware agnostic approach, i.e. not depending on specialized hardware, accelerators or GPUs \cite{Peddie2019_hardware}
-which one could argue would be better suited for tackling this type of problems.
+which one could argue would be better suited for tackling this type of problem.
 
 In order to model a simple black hole scenario, we can use the Schwarzschild metric \cite{schw_soln-2007}.
 This models black holes which, among other properties, are non-spinning and not charged,
@@ -86,8 +86,8 @@ As noted earlier though, we cannot use the trajectories of rays in 2D space to r
 \subsection{Image and scene handling}
 %https://scholar.google.com/scholar?hl=en&as_sdt=0%2C5&q=boost+GIL+Generic+Image+Library&btnG=
 Image and scene handling was done both with JPEG and with PPM support.
-For JPEG support, the Boost's Generic Image Library
-\cite{schaling_boost,bourdev2007generic} (and consequently libjpeg) was used, and for PPM support, a custom parser was written. Both of these parsers rely on loading the entire image into memory, which has the advantage of quick pixel access, at the cost of potentially loading a lot of unused pixel data into memory. For moderately sized images, this is an appropriate tradeoff, however, for very large astronomical images, this could quickly become a problem, especially as the size of an image (Plus whatever memory is needed for rendering) eclipses the available RAM. To deal with this, future implementations could apply a number of techniques:
+For JPEG support, Boost's Generic Image Library
+\cite{schaling_boost,bourdev2007generic} (and consequently libjpeg) was used. For PPM support, a custom parser was written. Both of these parsers rely on loading the entire image into memory, which has the advantage of quick pixel access, at the cost of potentially loading a lot of unused pixel data into memory. For moderately sized images, this is an appropriate tradeoff, however, for very large astronomical images, this could quickly become a problem, especially as the size of an image (Plus whatever memory is needed for rendering) eclipses the available RAM. To deal with this, future implementations could apply a number of techniques:
 1. Refuse to load the image into memory, instead relying on an `fseek+fread` style implementation, which is likely to perform well on SSD storage, but poorly over the network.
 2. Decompose the image, and have each process store a portion in memory, at the cost of having to exchange pixels when a light ray "misses" our portion of the image. This strategy, if poorly optimized, could result in horrible performance, as it is quite difficult to predict the trajectories of an arbitrary light ray in advance, meaning we are likely to miss our loaded portion of the image. This could easily yield a network bottleneck.
 3. Load portions of the image that are relevant to our render only. This is somewhat of a balance of the previous two approaches, at the cost of additional complexity. 
@@ -101,7 +101,7 @@ The downside of domain decomposition is that we now have separate bands rendered
 
 \subsection{Use of OpenMP}
 In the context of a single band, it is quite easy to use OpenMP \cite{660313_OMP} to accelerate rendering, as the problem can be decomposed along the individual scanlines. This was quite helpful, as MPI was best used to distribute the problem across nodes, and OpenMP was useful for distributing the problem across cores.
-Additionally, as shown in Sec.~\ref{sec:results}, OpenMP threads scale significantly better than MPI processes, meaning we would like to take advantage of the increased performance wherever possible.
+Additionally, as shown in Sec.~\ref{sec:results}, OpenMP threads can scale better than MPI processes, meaning we would like to take advantage of the increased performance wherever possible.
 
 
 \subsection{Code Availability}
@@ -167,12 +167,12 @@ We present two images -- Figs.~\ref{fig:eagle} and \ref{fig:starry}, it is easy 
 % boost version: 1.86.0
 % Niagara env information is already listed in the paper
 
-In this type of problems, it is possible to consider different \textit{metrics} to analyze the scaling behavior of a given implementation.
+For this problem, it is possible to consider different \textit{metrics} to analyze the scaling behavior of a given implementation.
 For instance, one could consider increasing the size of the background image to stress image parsing;
 or instead increase the number of rendered pixels;
 or decrease $\varepsilon$ yielding to more calls into GSL;
 or increase samples-per-pixel which controls antialiasing.
-For performing a weak scaling analysis, additionally it would be required to add more "working units", i.e. nodes or cores depending on the implementation.
+Additionally, for performing a weak scaling analysis, it would be required to add more "working units", i.e. nodes or cores depending on the implementation.
 
 When increasing the size of the background image, we estimate that this increases the time spent outside the parallel region, as the background image has to be parsed by each process, which is likely to take the same amount of time per node.
 As such, we consider that this does not present significant interest for scaling analysis.
@@ -315,7 +315,7 @@ which might be an acceptable tradeoff for those looking for best-in-class perfor
 
 Gravitational lensing is a beautiful phenomenon, both when witnessed from space, and when digitally rendered.
 This paper explored a relatively simple method for creating a ray traced image which shows gravitational lensing, and how to accelerate the process using shared and distributed memory computing.
-Moreover one may argue that the ray-tracing problem has been solved, maybe even too many times.
+Moreover one may argue that the ray-tracing problem has been solved, potentially even too many times.
 However, taking a start-from-scratch approach, can be useful to highlight important and fundamental aspects of the basic techniques and implementations used.
 Furthermore an approach as this, offers multiple profound opportunities in the areas of teaching and education, both with regards to general scientific computing techniques as well as High-Performance Computing techniques.
 
