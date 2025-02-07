@@ -40,7 +40,7 @@ which one could argue would be better suited for tackling this type of problems.
 In order to model a simple black hole scenario, we can use the Schwarzschild metric \cite{schw_soln-2007}.
 This models black holes which, among other properties, are non-spinning and not charged,
 meaning that their deformation of the trajectories of light rays do not depend on the angle of approach.
-It has been well established \cite{gravitation-mtw} that the equation,
+It has been well established \cite{gravitation-mtw} that the ordinary differential equation (ODE),
 \begin{equation}
 	u'' - u = 3 M u^2
 	\label{eq:Sch-light-ray}
@@ -109,9 +109,18 @@ Additionally, as shown in Sec.~\ref{sec:results}, OpenMP threads scale significa
 
 
 \subsection{Code Availability}
-Based on all the elements described in the previous sections,
-we developed our source code in C++ which is available under GPL-v2 in the following
-GitHub repository: \url{https://github.com/liamnaddell/BHRaytracer}. The project was developed in a modular fashion, following best practices. Further details and technical documentation can be found in the repository.
+Considering all the elements described in the previous sections, we developed our
+source code in C++ which is available under a GPL-v2 license, in the following
+GitHub repository:
+	\url{https://github.com/liamnaddell/BHRaytracer}.
+
+The code was developed in a modular fashion, with versions
+for shared-memory (via OpenMP),
+distributed-memory (via MPI), and hybrid parallelism (via OpenMP+MPI).
+Further details and technical documentation can be found in the repository.
+Additionally, in order to help with reproducibility of results, we include in
+the repository: submission scripts and parameters used to
+generate the renders and plots presented in this work.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -157,29 +166,6 @@ We present two images -- Figs.~\ref{fig:eagle} and \ref{fig:starry}, it is easy 
 % Niagara env information is already listed in the paper
 % 
 % 
-%
-%
-%
-%
-%
-%
-%
-%
-%
-%
-%
-%
-%
-%
-%
-%
-%
-%
-%
-%
-%
-%
-%
 
 
 In this type of problems, it is possible to consider different \textit{metrics} to analyze the scaling behavior of a given implementation.
