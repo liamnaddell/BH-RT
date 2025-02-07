@@ -126,11 +126,11 @@ This section includes results of images rendered employing our ray tracer's impl
 The background images for these renders were taken from NASA's Scientific Visualization Studio and the ESA/Nasa Hubble Mission.
 We present two images -- Figs.~\ref{fig:eagle} and \ref{fig:starry}, it is easy to see the effects of gravitational lensing, as well as the clear Einstein ring. 
 
-
+%./main -i ../eagle.jpg -s 10 -W 2700
 \begin{figure}[h]
   \centering
   \includegraphics[width=0.8\linewidth]{figs/eagle_render}
-  \caption{Image generated from a portion of the Eagle Nebula M16 downloaded from \cite{esa-pillars}.}
+  \caption{Image generated from a portion of the Eagle Nebula M16 downloaded from \cite{esa-pillars}. Rendered in 16:9 with 2700 pixels of width and 10 samples per pixel of antialiasing}
   \label{fig:eagle}
 \end{figure}
 
@@ -141,7 +141,7 @@ We present two images -- Figs.~\ref{fig:eagle} and \ref{fig:starry}, it is easy 
   \centering
   \includegraphics[width=0.8\linewidth]{figs/starry_render}
   \caption{A second example of an application from our ray tracer implementation,
-	in this case from the CANDELS project\cite{candels-nasa_svs}.}
+	in this case from the CANDELS project\cite{candels-nasa_svs}. Also rendered in 16:9 with 2700 pixels of width and 10 samples per pixel of antialiasing}
   \label{fig:starry}
 \end{figure}
 
