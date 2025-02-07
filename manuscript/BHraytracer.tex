@@ -1,5 +1,3 @@
-\TODO{L: I need to spellcheck at some point}
-\TODO{L: Regenerate the renders}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Introduction}
@@ -20,7 +18,6 @@ In these cases, ray-tracing techniques have been applied to
 General Relativistic Magneto-HydroDynamics simulations in order to produce 
 the so-called fiducial templated models of the event horizon images.
 These techniques have allowed us to produce images that have captivated the minds and interest of millions.
-%Liam: This sentence ruins the flow.
 %After establishing the theory and equations for describing the trajectories of light rays around a black hole, it is natural to try to use a ray tracer to render a scene within this geometry which ultimately results in a particular distortion applied to the general techniques.
 
 We should emphasize that there exist a large variety of ray tracer implementations already 
@@ -54,7 +51,6 @@ Notably, this equation is modeled in 2D-spherical coordinates, meaning, if we wa
 
 After being able to compute the trajectory of individual rays, we can use these rays to generate a full image using ray tracing. Ray tracers render a simulated scene by casting light rays from a simulated camera, and computing what objects in the scene would be visible to that ray. Hypothetically, if a particular camera would produce an image of $1920 \times 1080$ pixels, we could build the image that camera would record by casting a light ray through each pixel. Because ray tracing's unit of perception is how simulated light rays interact with a simulated scene, it is a natural choice for simulations which involve the bending or distortion of light.
 
-%NOTE: Liam: I don't like this section since it breaks up the flow of the previous paragraph to the next
 %Having given an introduction in Sec.~\ref{sec:intro} to the problem, we will proceed in Sec.~\ref{sec:impl} to describe our implementation approach, followed by results in  Sec.~\ref{sec:results} and a discussion in Sec.~\ref{sec:disc} and ~\ref{sec:concl}.
 
 
@@ -159,14 +155,10 @@ We present two images -- Figs.~\ref{fig:eagle} and \ref{fig:starry}, it is easy 
 
 \subsection{Scaling analysis}
 
-%To Marcelo:
 % modules used: module load NiaEnv/2022a gcc/11.3.0 openmpi/5.0.2+ucx-1.15.0 cmake/3.31.5 gdb/10.2 gsl/2.7
 % (Any reasonably modern cmake will work, the exact MPI version doesn't matter, I also tested on openmpi 5.0.6-2)
 % boost version: 1.86.0
 % Niagara env information is already listed in the paper
-% 
-% 
-
 
 In this type of problems, it is possible to consider different \textit{metrics} to analyze the scaling behavior of a given implementation.
 For instance, one could consider increasing the size of the background image to stress image parsing;
@@ -299,7 +291,7 @@ allows for well-integrated and optimized scaling to run the ray tracer in larger
 This is a substantially more solid and potentially better scalable solution than other ones
 where \textit{farm rendering} approaches are used \cite{10.1145/3528223.3530171,app112412046}.
 Moreover the latter approaches would be only useful in cases of \textit{embarrassingly parallel}
-tasks (e.g. by splitting images or partioning independent data/field-views),
+tasks (e.g. by splitting images or partitioning independent data/field-views),
 and even in those case it would be questionable whether or not the preparation work done required in 
 order to prepare, administrate, and recombine these results is worth the cost.
 Of course, we should not forget implementations employing \textit{GPU rendering}, for which
