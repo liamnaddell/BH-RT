@@ -17,7 +17,7 @@ and the supermassive black hole Sagittarius A* at the center of our own galaxy \
 In these cases, ray-tracing techniques have been applied to
 General Relativistic Magneto-HydroDynamics simulations in order to produce 
 the so-called fiducial templated models of the event horizon images.
-These techniques have allowed us to produce images that have captivated the minds and interest of millions.
+Techniques such as these have allowed us to produce images and media that have captivated the minds of millions.
 
 We should emphasize that there exist a large variety of ray tracer implementations already 
 \cite{imbens2023graphicalprocessinggeodesicpropagation,10.2312/EGPGV/EGPGV12/051-060,7539599_OSPRay}
@@ -145,14 +145,10 @@ For instance, one could consider increasing the size of the background image to 
 or instead increase the number of rendered pixels;
 or decrease $\varepsilon$ yielding to more calls into GSL;
 or increase samples-per-pixel which controls antialiasing.
-Additionally, for performing a weak scaling analysis, it would be required to add more "working units", i.e. nodes or cores depending on the implementation.
 
-When increasing the size of the background image, we estimate that this increases the time spent outside the parallel region, as the background image has to be parsed by each process, which is likely to take the same amount of time per node.
-As such, we consider that this does not present significant interest for scaling analysis.
-
-However, decreasing $\varepsilon$ is an interesting scaling parameter, as it is responsible for some of the fidelity of a rendered image. The challenge is that it is hard to be sure how decreasing/increasing $\varepsilon$ will impact the amount of time needed for a GSL call, which by itself could be an interesting topic of study.
-
-We consider though, that the main parameters of interest are number of rendered pixels, and the number of cores used (across both multiple nodes and single nodes). This was chosen because the number of rendered pixels corresponds very closely to the amount of total work required to render a scene.
+When increasing the size of the background image, we estimate that this increases the time spent outside the parallel region, as the background image has to be parsed by each MPI process.
+Because of this, we consider that this does not present significant interest for scaling analysis.
+In contrast, the number of rendered pixels, and the number of cores used present useful scaling parameters, since they correspond most directly to the amount of work needing to be done, and the number of workers amongst whom the work may be divided.
 
 \begin{figure*}[h]
   \centering
@@ -215,7 +211,7 @@ As a rich computational project, it combines elements from multiple disciplines,
 physics simulations (both through the use of a ray tracer, and through the simulation of gravitational distortion),
 solutions to differential equations via approximations with GSL,
 path stenciling, image/file parsing,
-parallel and distributed computing with MPI and OpenMP, and domain decomposition,
+parallel and distributed computing with MPI and OpenMP, and domain decomposition.
 In particular, the project would provide potential students an excellent opportunity 
 to learn the practical use of GSL/ODE approximation in a realistic context.
 Additionally, opportunities to practice domain decomposition and parallel image processing are provided.
@@ -248,8 +244,8 @@ Additionally, opportunities to practice domain decomposition and parallel image 
 
 Gravitational lensing is a beautiful phenomenon, both when witnessed from space, and when digitally rendered.
 This paper explored a relatively simple method for creating a ray traced image which shows gravitational lensing, and how to accelerate the process using shared and distributed memory computing.
-Moreover one may argue that the ray-tracing problem has been solved, potentially even too many times.
-However, taking a start-from-scratch approach, can be useful to highlight important and fundamental aspects of the basic techniques and implementations used.
-Furthermore an approach as this, offers multiple profound opportunities in the areas of teaching and education, both with regards to general scientific computing techniques as well as High-Performance Computing techniques.
+One may argue that the ray-tracing problem has been solved,
+however, taking a start-from-scratch approach, can be useful to highlight important and fundamental aspects of the basic techniques and implementations used.
+Furthermore an approach such as this, offers multiple profound opportunities in the areas of teaching and education, both with regards to general scientific and High-Performance computing techniques.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
