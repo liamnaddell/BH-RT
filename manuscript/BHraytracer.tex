@@ -68,7 +68,7 @@ As for how to compute these segments, the GNU Scientific Library's (GSL) suite \
 \begin{figure}[h]
   \centering
   \includegraphics[width=.65\linewidth]{figs/nextpoint}
-  \caption{We use Euclidean geometry to compute $d\phi$, then rely on GSL to stencil the ray's path until the simulation progresses by $d\phi$}
+  \caption{We use Euclidean geometry to compute $d\phi$, then rely on GSL to stencil the ray's path until the simulation progresses by $d\phi$. The point at the center is the origin of a black hole.}
   \label{fig:nextpoint}
 \end{figure}
 
@@ -85,15 +85,6 @@ Considering all the elements described in the previous sections, we developed ou
 source code in C++ which is available under a GPL-v2 license, in the following
 GitHub repository:
 	\url{https://github.com/liamnaddell/BHRaytracer}.
-
-%The code was developed in a modular fashion, with versions
-%for shared-memory (via OpenMP),
-%distributed-memory (via MPI), and hybrid parallelism (via OpenMP+MPI).
-%Further details and technical documentation can be found in the repository.
-%Additionally, in order to help with reproducibility of results, we include in
-%the repository: submission scripts and parameters used to
-%generate the renders and plots presented in this work.
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -213,6 +204,6 @@ Gravitational lensing is a beautiful phenomenon, both when witnessed from space,
 This paper explored a relatively simple method for creating a ray traced image which shows gravitational lensing, and how to accelerate the process using shared and distributed memory computing.
 One may argue that the ray-tracing problem has been solved,
 however, taking a start-from-scratch approach, can be useful to highlight important and fundamental aspects of the basic techniques and implementations used.
-Furthermore an approach such as this, offers multiple profound opportunities in the areas of teaching and education, both with regards to general scientific and High-Performance computing techniques.
+Furthermore, an approach such as this offers multiple profound opportunities in the areas of teaching and education, both with regards to general scientific and High-Performance computing techniques.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
