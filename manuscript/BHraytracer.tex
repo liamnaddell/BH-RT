@@ -153,14 +153,14 @@ In contrast, the number of rendered pixels, and the number of cores used present
   \centering
  \begin{minipage}{0.45\linewidth}
   \includegraphics[width=\linewidth]{figs/mpi_weak2.out}
- \caption{Weak scaling analysis where MPI process count and image width are increased in tandem  }
+ \caption{Weak scaling analysis where MPI process/OMP thread count and image width are increased in tandem }
 	  \Description{As core count and image width increase linearly, time increases linearly }
     \label{fig:mpi_weak2}
     \end{minipage}
   \hspace{.05\linewidth}
   \begin{minipage}{0.45\linewidth}
       \includegraphics[width=\linewidth]{figs/mpi_strong_multinode.out}
-      \caption{Multi-node scaling analysis with 4 cores per node}
+      \caption{Multi-node strong scaling analysis with 40 cores per node. Speedup decreases once network interconnect is utilized}
 	  \Description{Time still converges to serial fraction even on a mutlinode system }
         \label{mpi_strong_multinode}
     \end{minipage}
@@ -180,7 +180,6 @@ In contrast, the number of rendered pixels, and the number of cores used present
 \end{figure*}
 
 Fig.~\ref{fig:mpi_weak2} show a weak scaling analysis where we linearly increase the number of pixels rendered and the single-node cores utilized in tandem. We observe that both OpenMP and MPI start at around 145 seconds, and increase logarithmically before plateauing roughly around 170-185 seconds per run. While ideally, we would observe a consistent time which does not increase, these results show relatively stable performance. We also witness OpenMP slightly outperforming MPI, which is expected, since MPI requires transferring pixel data between processes.
-%TODO: Explain <5s variance as work division?
 
 We observe something similar with the strong scaling results in Figs.~\ref{fig:mpi_strong} and ~\ref{fig:omp_strong}. These results were run by increasing the number of cores used with a fixed workload. These results show an almost perfect convergence down to the serial fraction with similarly competitive results between OpenMP and MPI.
 
@@ -188,7 +187,7 @@ All the results and analysis presented in this section were obtained
 running our code on the Niagara supercomputer \cite{10.1145/3332186.3332195},
 which is a large homogeneous cluster composed by 2,024 Lenovo SD530 servers
 each with 40 Intel "Skylake"/"CascadeLake" cores working at approx. 2.4/2.5 GHz.
-Each result is an average of 5 runs with identical parameters.
+Each result is an average of 5 runs with identical parameters, and each MPI process is allocated 1 rank.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
