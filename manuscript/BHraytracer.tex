@@ -160,7 +160,7 @@ In contrast, the number of rendered pixels, and the number of cores used present
   \hspace{.05\linewidth}
   \begin{minipage}{0.45\linewidth}
       \includegraphics[width=\linewidth]{figs/mpi_strong_multinode.out}
-      \caption{Multi-node strong scaling analysis with 40 cores per node. Speedup decreases once network interconnect is utilized}
+      \caption{Multi-node strong scaling analysis shows good speedup across 8 nodes}
 	  \Description{Time still converges to serial fraction even on a mutlinode system }
         \label{mpi_strong_multinode}
     \end{minipage}
@@ -173,13 +173,13 @@ In contrast, the number of rendered pixels, and the number of cores used present
   \hspace{.05\linewidth}
  \begin{minipage}{0.45\linewidth}
   \includegraphics[width=\linewidth]{figs/omp_strong.out}
-  \caption{Strong scaling analysis with OpenMP threads -- OpenMP is slightly faster}
+  \caption{Strong scaling analysis with OpenMP threads -- MPI and OpenMP have similar performance}
     \Description{Weak scaling analysis relating MPI process count, time required for computation, and image width}
     \label{fig:omp_strong}
     \end{minipage}
 \end{figure*}
 
-Fig.~\ref{fig:mpi_weak2} show a weak scaling analysis where we linearly increase the number of pixels rendered and the single-node cores utilized in tandem. We observe that both OpenMP and MPI start at around 145 seconds, and increase logarithmically before plateauing roughly around 170-185 seconds per run. While ideally, we would observe a consistent time which does not increase, these results show relatively stable performance. We also witness OpenMP slightly outperforming MPI, which is expected, since MPI requires transferring pixel data between processes.
+Fig.~\ref{fig:mpi_weak2} shows a weak scaling analysis where we linearly increase the number of pixels rendered and the single-node cores utilized in tandem. We observe that both OpenMP and MPI start at around 145 seconds, and increase logarithmically before plateauing roughly around 170-185 seconds per run. While ideally, we would observe a consistent time which does not increase, these results show relatively stable performance. We also witness OpenMP outperforming MPI most of the time, which is expected, since MPI requires transferring pixel data between processes.
 
 We observe something similar with the strong scaling results in Figs.~\ref{fig:mpi_strong} and ~\ref{fig:omp_strong}. These results were run by increasing the number of cores used with a fixed workload. These results show an almost perfect convergence down to the serial fraction with similarly competitive results between OpenMP and MPI.
 
