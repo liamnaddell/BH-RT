@@ -166,10 +166,7 @@ In contrast, the number of rendered pixels, and the number of cores used present
     \end{minipage}
   \begin{minipage}{0.45\linewidth}
       \includegraphics[width=\linewidth]{figs/mpi_strong.out}
-	  \caption{Strong scaling analysis as MPI process count is increased.
-  		It is worth noticing, in particular when comparing Figs.~\ref{fig:mpi_strong} and \ref{fig:omp_strong},
-    		that although the runtimes are within a few seconds, the differences may be appreciated by comparing relative speedups."
-   		}
+	  \caption{Strong scaling analysis as MPI process count is increased. }
       \Description{Speedup is nearly linear and time plateaus}
       \label{fig:mpi_strong}
     \end{minipage}
@@ -185,6 +182,8 @@ In contrast, the number of rendered pixels, and the number of cores used present
 Fig.~\ref{fig:mpi_weak2} shows a weak scaling analysis where we linearly increase the number of pixels rendered and the single-node cores utilized in tandem. We observe that both OpenMP and MPI start at around 145 seconds, and increase logarithmically before plateauing roughly around 170-185 seconds per run. While ideally, we would observe a consistent time which does not increase, these results show relatively stable performance. We also witness OpenMP outperforming MPI most of the time, which is expected, since MPI requires transferring pixel data between processes.
 
 We observe something similar with the strong scaling results in Figs.~\ref{fig:mpi_strong} and ~\ref{fig:omp_strong}. These results were run by increasing the number of cores used with a fixed workload. These results show an almost perfect convergence down to the serial fraction with similarly competitive results between OpenMP and MPI.
+It is worth noticing as well when comparing Figs.~\ref{fig:mpi_strong} and \ref{fig:omp_strong}
+ that although the runtimes are within a few seconds, the difference in time can be appreciated by comparing relative speedups.
 
 All the results and analysis presented in this section were obtained
 running our code on the Niagara supercomputer \cite{10.1145/3332186.3332195},
