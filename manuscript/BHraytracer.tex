@@ -154,14 +154,14 @@ In contrast, the number of rendered pixels, and the number of cores used present
  \begin{minipage}{0.45\linewidth}
   \includegraphics[width=\linewidth]{figs/mpi_weak2.out}
  \caption{Weak scaling analysis where MPI process/OMP thread count and image width are increased in tandem.}
-	  %\Description{As core count and image width increase linearly, time increases linearly }
+	  \Description{As core count and image width increase linearly, time increases linearly }
     \label{fig:mpi_weak2}
     \end{minipage}
   \hspace{.05\linewidth}
   \begin{minipage}{0.45\linewidth}
       \includegraphics[width=\linewidth]{figs/mpi_strong_multinode.out}
       \caption{Multi-node strong scaling analysis shows good speedup across 8 nodes.}
-	  %\Description{Time still converges to serial fraction even on a mutlinode system }
+	  \Description{Time still converges to serial fraction even on a mutlinode system }
         \label{mpi_strong_multinode}
     \end{minipage}
   \begin{minipage}{0.45\linewidth}
@@ -170,14 +170,14 @@ In contrast, the number of rendered pixels, and the number of cores used present
   		It is worth noticing, in particular when comparing Figs.~\ref{fig:mpi_strong} and \ref{fig:omp_strong},
     		that although the runtimes are within a few seconds, the differences may be appreciated by comparing relative speedups."
    		}
-      %\Description{Speedup is nearly linear and time plateaus}
+      \Description{Speedup is nearly linear and time plateaus}
       \label{fig:mpi_strong}
     \end{minipage}
   \hspace{.05\linewidth}
  \begin{minipage}{0.45\linewidth}
   \includegraphics[width=\linewidth]{figs/omp_strong.out}
   \caption{Strong scaling analysis with OpenMP threads -- MPI and OpenMP have similar performance.}
-    %\Description{Weak scaling analysis relating MPI process count, time required for computation, and image width}
+    \Description{Time converges to the serial fraction, and speedup decreases with increased core count}
     \label{fig:omp_strong}
     \end{minipage}
 \end{figure*}
