@@ -91,8 +91,9 @@ As for how to compute these segments, the GNU Scientific Library's (GSL) suite \
 The essential element of speeding up a problem with Message Passing Interface (MPI) \cite{mpi41} is often to attempt to decompose the problem space into subproblems which can be computed on an individual node. In our case, our problem space is the image we are attempting to render. The most simple solution is to decompose along the scanlines, and render distinct scanlines on distinct nodes. In effect, one would attempt to assign a "band" to each process to render against.
 
 \subsection{Use of OpenMP}
-In the context of a single band, it is quite easy to use OpenMP \cite{660313_OMP} to accelerate rendering, as the problem can be decomposed along the individual scanlines. This was quite helpful, as MPI was best used to distribute the problem across nodes, and OpenMP was useful for distributing the problem across cores.
-Additionally, as shown in Sec.~\ref{sec:results}, OpenMP threads can scale better than MPI processes, meaning we would like to take advantage of the increased performance wherever possible.
+In the context of a single band, it is quite easy to use OpenMP \cite{660313_OMP} to accelerate rendering, as the problem can be decomposed along the individual scanlines. This was quite helpful, as MPI was best used to distribute the problem across nodes, and OpenMP was useful for distributing the problem across cores within the node.
+%Additionally, as shown in Sec.~\ref{sec:results}, OpenMP threads can scale better than MPI processes, meaning we would like to take advantage of the increased performance wherever possible.
+% ^^^ Didn't end up being true for us :/
 
 \subsection{Code Availability}
 Considering all the elements described in the previous sections, we developed our
