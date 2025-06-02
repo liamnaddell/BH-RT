@@ -18,7 +18,7 @@ $(TARGET): $(SOURCE) *tex refs.bib
 
 
 distrib:
-	tar -cHvzf $(TARBALL)  *tex refs_CP.bib Makefile figs/ 
+	tar -cvzf $(TARBALL)  *tex refs.bib Makefile figs/
 
 all: $(TARGET) $(TARGETa)
 
