@@ -1,0 +1,117 @@
+\documentclass[dvipsnames,aspectratio=169]{beamer}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{pckges}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+
+\newcommand{\pichere}[1]{\begin{picture}(0,0)\thicklines #1\end{picture}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% this is to make the equations use the correct font
+\usefonttheme{professionalfonts}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\mode<presentation>{
+%  \usetheme{Warsaw}
+%  \usetheme{Boadilla}
+\usetheme[progressbar=foot]{metropolis}
+%  \usetheme{Hannover}
+ \setbeamertemplate{navigation symbols}{} % suppress nav bar
+%  \logo{\pichere{\put(-55,-5){\includegraphics[scale=0.08]{../logos/SciNet_newLogo-transp2wShadow.png}}}}%
+%\logo{\pichere{\put(-55,-55){\includegraphics[scale=10.1]{figs/PEARC25_Logo_Tagline}}}}
+%   \usecolortheme{lilly}
+%  \usecolortheme{magpie}
+%\usecolortheme[snow]{owl}
+% DARK THEME
+%\usecolortheme[]{owl}
+%\usecolortheme[metropolis]{owl}
+}
+
+\logo{\includegraphics[width=5cm]{figs/PEARC25_Logo_Tagline}}
+
+\setbeamerfont{page number in head/foot}{size=\tiny}
+\setbeamercolor{footline}{fg=gray}
+
+
+\setbeamercolor{mycolor1}{fg=black,bg=gray!20}
+\setbeamercolor{mycolor2}{fg=black,bg=gray!50}
+\setbeamercolor{mycolor3}{fg=black,bg=gray!20}
+\setbeamercolor{mycolor4}{fg=black,bg=gray!60}
+%
+\setbeamercolor{upcol}{fg=black,bg=gray}
+\setbeamercolor{lowcol}{fg=black,bg=gray!40}
+
+\makeatother
+\setbeamertemplate{footline}
+{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.3\paperwidth,ht=2.25ex,dp=1ex,center]{mycolor1}%{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertauthor%\insertshortauthor
+  \end{beamercolorbox}%
+%
+  \begin{beamercolorbox}[wd=.3\paperwidth,ht=2.25ex,dp=1ex,center]{mycolor2}%{title in head/foot}%
+    \usebeamerfont{title in head/foot}\insertshorttitle\hspace*{3em}
+  \end{beamercolorbox}%
+%
+  \begin{beamercolorbox}[wd=.3\paperwidth,ht=2.25ex,dp=1ex,center]{mycolor3}%{title in head/foot}%
+    \usebeamerfont{title in head/foot}\insertshortdate\hspace*{3em}
+  \end{beamercolorbox}%
+%
+  \begin{beamercolorbox}[wd=.1\paperwidth,ht=2.25ex,dp=1ex,center]{mycolor4}%{title in head/foot}%
+    %\usebeamerfont{title in head/foot}\insertshorttitle\hspace*{3em}
+    \insertframenumber{} / \inserttotalframenumber\hspace*{1ex}
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% set bold tt and math fonts
+\boldmath
+\font\ttrm = cmtt8
+%\font\ttbf = cmbtt8
+\font\ttbf = cmb10
+\font\ttl = cmtt10
+\font\ttit = cmitt9
+\renewcommand{\tt}{\ttrm}
+\renewcommand{\texttt}[1]{{\ttl #1}}
+
+
+
+%\usepackage{currfile}
+%\edef\CurrentFileDir{\currfiledir}
+\usepackage[abspath]{currfile}[2012/05/06]
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{document}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{title}
+
+\input{content}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\end{document}
+
