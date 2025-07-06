@@ -39,7 +39,7 @@
 %\usecolortheme[metropolis]{owl}
 }
 
-\logo{\includegraphics[width=5cm]{figs/PEARC25_Logo_Tagline}}
+\logo{\includegraphics[width=2.5cm]{figs/PEARC25_Logo_Tagline}}
 
 \setbeamerfont{page number in head/foot}{size=\tiny}
 \setbeamercolor{footline}{fg=gray}
@@ -96,7 +96,6 @@
 %\usepackage{currfile}
 %\edef\CurrentFileDir{\currfiledir}
 \usepackage[abspath]{currfile}[2012/05/06]
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
@@ -107,11 +106,149 @@
 
 \input{title}
 
-\input{content}
+%\input{content}
 
+\begin{frame}
+\frametitle{Table of Contents}
+\tableofcontents
+\end{frame}
+
+\section{What is a Raytracer?}
+
+\begin{frame}
+\frametitle{Raytracing}
+\begin{enumerate}
+    \item{
+        Raytracers create an image by tracing the path light rays take from
+        the aperature of a simulated camera, through the “image”
+    }
+    \item{
+        We use linear algebra to compute collision with various objects in the
+        scene.
+    }
+    \item{
+        With proper setup, this can let us create photorealistic images.
+    }
+\end{enumerate}
+\includegraphics[scale=.12]{figs/raytrace.png}
+% TODO: How do I cite this?
+\end{frame}
+
+\begin{frame}
+\frametitle{How to black holes deform light?}
+\begin{enumerate}
+    \item{
+        The Schwarzschild metric tells us the paths light rays take in the orbit of a non-spinning neutrally charged black hole
+    }
+    \item{
+            We can simplify the Schwarzschild metric by substituting $r=\frac{1}{u}$, with $\frac{du}{d\phi}=u^{\prime}$. $\phi$ is the angle in spherical coordinates from the origin of the black hole.
+    }
+    \item{
+            The path of a light ray follows the equation $u^{\prime\prime}-u=3Mu^{2}$, where M is the mass of the black hole.
+    }
+\end{enumerate}
+\end{frame}
+
+%TODO: fix the footline
+\begin{frame}
+\frametitle{Tracing a single ray of light}
+\begin{enumerate}
+    \item{
+            The previous equations shown are 2-variable equations, since our black holes are independent of approach angle.
+    }
+    \item{
+            We can reduce our 3-D system to 2-D by applying some rotations and transformations
+    }
+    \item{
+            After doing this, we compute $u_{next}$ using an extrapolated trajectory, and use GSL to solve for $\phi_{next}$.
+    }
+    \item{
+            After solving for u and $\phi$, we can undo our linear transformations to compute the points on our light ray in 3-D
+    }
+\end{enumerate}
+\end{frame}
+
+\begin{frame}
+\frametitle{Tracing an image}
+\begin{enumerate}
+    \item{
+        By finding a way to iterate through evenly spaced points on a light ray, we can apply our regular ray-tracing algorithms!
+    }
+    \item{
+        We can cast a ray through each pixel in the viewplane, and trace the output trajectory from GSL!
+    }
+\end{enumerate}
+\end{frame}
+
+\begin{frame}
+\frametitle{Results (1/4)}
+\includegraphics[height=6.9cm]{../../figs/starry_render.jpg}
+\end{frame}
+
+\begin{frame}
+\frametitle{Results (2/4)}
+\includegraphics[height=6.9cm]{../../figs/eagle_render.jpg}
+\end{frame}
+
+\begin{frame}
+\frametitle{Speed Challenges}
+\begin{enumerate}
+    \item{
+        Tracing a single ray can require ~2000 computed points for a low quality render (upwards of 40,000 for high quality renders)
+    }
+    \item{
+        A normal sized image can contain 2073600 pixels
+    }
+    \item{
+        Each pixel can require 10 computed rays for anti-aliasing
+    }
+    \item{
+        All of this can be extrordinarily expensive!!
+    }
+\end{enumerate}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{MPI+OpenMP}
+\begin{enumerate}
+    \item{
+        Each pixel can be rendered independently, which means we can break up this image any way we please. 
+    }
+    \item{
+        We break up the image horizontally, and send a different band to each process
+    }
+    \item{
+        Within each band, we can render each scanline on a single OpenMP thread.
+    }
+\end{enumerate}
+\end{frame}
+
+\begin{frame}
+\frametitle{Comparing MPI and OMP (1/2)}
+\includegraphics[height=4.9cm]{../../figs/mpi_strong.out.png}
+\includegraphics[height=4.9cm]{../../figs/omp_strong.out.png}
+\end{frame}
+
+\begin{frame}
+\frametitle{Comparing MPI and OMP (2/2)}
+\includegraphics[height=4.9cm]{../../figs/mpi_weak2.out.png}
+\includegraphics[height=4.9cm]{../../figs/omp_weak2.out.png}
+\end{frame}
+
+%TODO: Change the style from counters to bullet points
+\begin{frame}
+\frametitle{How does MPI scale across nodes}
+\centering
+\begin{enumerate}
+    \item{
+        This analysis shows how MPI scales as the number of nodes is increased under strong scaling.
+    }
+\end{enumerate}
+\includegraphics[height=6cm]{../../figs/mpi_strong_multinode.out.png}
+\end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 
 \end{document}
 
