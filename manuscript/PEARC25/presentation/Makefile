@@ -13,6 +13,7 @@ JUNK=.aux .bbl .blg .dvi .log .nav .out .ps .pdf .snm .tex.backup .tex.bak .toc 
 #$(TARGET): $(SOURCE) *tex refs.bib 
 $(TARGET): $(SOURCE) *tex
 	@pdflatex $(SOURCE)
+	@pdflatex $(SOURCE)
 #@bibtex $(NAME)
 #@pdflatex $(SOURCE)
 #@pdflatex $(SOURCE)

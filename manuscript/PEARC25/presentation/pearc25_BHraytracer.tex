@@ -113,7 +113,61 @@
 \tableofcontents
 \end{frame}
 
-\section{What is a Raytracer?}
+\section{What are We Trying to Accomplish?}
+
+\begin{frame}
+\frametitle{What are we trying to accomplish?}
+\begin{enumerate}
+    \item{
+            We want to create digital renders of black holes
+    }
+    \item{
+            We know the equations that define black hole geometry
+    }
+    \item{
+            We might be able to utilize these equations to create scene renders under black hole geometry.
+    }
+\end{enumerate}
+% TODO: How do I cite this?
+\end{frame}
+
+\section{What Are the Equations?}
+
+\begin{frame}
+\frametitle{How to Black Holes Deform Light?}
+\begin{enumerate}
+    \item{
+            The Schwarzschild Metric tells us the paths light rays take in the orbit of a non-spinning neutrally charged black hole
+    }
+    \item{
+            %TODO: Cite
+            Given M, the mass of the black hole,
+             we can simplify the Schwarzschild Metric to obtain $u^{\prime\prime}-u=3Mu^{2}$. Where $u=\frac1{r}$, 
+             with $r$ being the distance between the light ray and the black hole origin,
+             and $u^\prime=\frac{du}{d\phi}$, 
+             where $\phi$ is the angle in spherical coordinates to the origin of the black hole.
+    }
+    \item{
+            This means that given some initial positional parameters, we are able to trace the path of a light ray as it orbits a black hole using GSL.
+    }
+\end{enumerate}
+\end{frame}
+
+\section{How We Can Use These Equations}
+\begin{frame}
+\frametitle{Raytracing}
+\begin{enumerate}
+    \item{
+        Since we have a way to trace the path of light rays around a given black hole, we can utilize Raytracing in order to render an image
+    }
+    \item{
+        Raytracers normally compute trajectories under the assumption that light takes a straight path, however, we will need to modify the Raytracer to account for the distortion of black hole geometry.
+    }
+    \item{
+        This technique is called Ray Marching
+    }
+\end{enumerate}
+\end{frame}
 
 \begin{frame}
 \frametitle{Raytracing}
@@ -134,51 +188,39 @@
 % TODO: How do I cite this?
 \end{frame}
 
-\begin{frame}
-\frametitle{How to black holes deform light?}
-\begin{enumerate}
-    \item{
-        The Schwarzschild metric tells us the paths light rays take in the orbit of a non-spinning neutrally charged black hole
-    }
-    \item{
-            We can simplify the Schwarzschild metric by substituting $r=\frac{1}{u}$, with $\frac{du}{d\phi}=u^{\prime}$. $\phi$ is the angle in spherical coordinates from the origin of the black hole.
-    }
-    \item{
-            The path of a light ray follows the equation $u^{\prime\prime}-u=3Mu^{2}$, where M is the mass of the black hole.
-    }
-\end{enumerate}
-\end{frame}
 
 %TODO: fix the footline
-\begin{frame}
-\frametitle{Tracing a single ray of light}
-\begin{enumerate}
-    \item{
-            The previous equations shown are 2-variable equations, since our black holes are independent of approach angle.
-    }
-    \item{
-            We can reduce our 3-D system to 2-D by applying some rotations and transformations
-    }
-    \item{
-            After doing this, we compute $u_{next}$ using an extrapolated trajectory, and use GSL to solve for $\phi_{next}$.
-    }
-    \item{
-            After solving for u and $\phi$, we can undo our linear transformations to compute the points on our light ray in 3-D
-    }
-\end{enumerate}
-\end{frame}
+%\begin{frame}
+%\frametitle{Tracing a single ray of light}
+%\begin{enumerate}
+%    \item{
+%            The previous equations shown are 2-variable equations, since our black holes are independent of approach angle.
+%    }
+%    \item{
+%            We can reduce our 3-D system to 2-D by applying some rotations and transformations
+%    }
+%    \item{
+%            After doing this, we compute $u_{next}$ using an extrapolated trajectory, and use GSL to solve for $\phi_{next}$.
+%    }
+%    \item{
+%            After solving for u and $\phi$, we can undo our linear transformations to compute the points on our light ray in 3-D
+%    }
+%\end{enumerate}
+%\end{frame}
 
-\begin{frame}
-\frametitle{Tracing an image}
-\begin{enumerate}
-    \item{
-        By finding a way to iterate through evenly spaced points on a light ray, we can apply our regular ray-tracing algorithms!
-    }
-    \item{
-        We can cast a ray through each pixel in the viewplane, and trace the output trajectory from GSL!
-    }
-\end{enumerate}
-\end{frame}
+%\begin{frame}
+%\frametitle{Tracing an image}
+%\begin{enumerate}
+%    \item{
+%        By finding a way to iterate through evenly spaced points on a light ray, we can apply our regular ray-tracing algorithms!
+%    }
+%    \item{
+%        We can cast a ray through each pixel in the viewplane, and trace the output trajectory from GSL!
+%    }
+%\end{enumerate}
+%\end{frame}
+
+\section{Results}
 
 \begin{frame}
 \frametitle{Results (1/4)}
