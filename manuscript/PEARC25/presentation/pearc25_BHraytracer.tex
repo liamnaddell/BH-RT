@@ -1,5 +1,6 @@
 \documentclass[dvipsnames,aspectratio=169]{beamer}
 
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
@@ -96,9 +97,10 @@
 %\usepackage{currfile}
 %\edef\CurrentFileDir{\currfiledir}
 \usepackage[abspath]{currfile}[2012/05/06]
+\usepackage[backend=biber,style=numeric-comp,sorting=none]{biblatex}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
+\addbibresource{../../refs.bib}
 \begin{document}
 
 
@@ -128,7 +130,6 @@
             We might be able to utilize these equations to create scene renders under black hole geometry.
     }
 \end{enumerate}
-% TODO: How do I cite this?
 \end{frame}
 
 \section{What Are the Equations?}
@@ -140,9 +141,8 @@
             The Schwarzschild Metric tells us the paths light rays take in the orbit of a non-spinning neutrally charged black hole
     }
     \item{
-            %TODO: Cite
             Given M, the mass of the black hole,
-             we can simplify the Schwarzschild Metric to obtain $u^{\prime\prime}-u=3Mu^{2}$. Where $u=\frac1{r}$, 
+            we can simplify the Schwarzschild Metric to obtain $u^{\prime\prime}-u=3Mu^{2}$\cite{gravitation-mtw}. Where $u=\frac1{r}$, 
              with $r$ being the distance between the light ray and the black hole origin,
              and $u^\prime=\frac{du}{d\phi}$, 
              where $\phi$ is the angle in spherical coordinates to the origin of the black hole.
@@ -184,12 +184,11 @@
         With proper setup, this can let us create photorealistic images.
     }
 \end{enumerate}
-\includegraphics[scale=.12]{figs/raytrace.png}
-% TODO: How do I cite this?
+\includegraphics[scale=.10]{figs/raytrace.png}
+\cite{wikipedia_raytrace}
 \end{frame}
 
 
-%TODO: fix the footline
 %\begin{frame}
 %\frametitle{Tracing a single ray of light}
 %\begin{enumerate}
@@ -223,13 +222,17 @@
 \section{Results}
 
 \begin{frame}
-\frametitle{Results (1/4)}
-\includegraphics[height=6.9cm]{../../figs/starry_render.jpg}
+\frametitle{Results}
+\includegraphics[height=6.5cm]{../../figs/starry_render.jpg}
+
+Image from NASA SVS\cite{candels-nasa_svs}
 \end{frame}
 
 \begin{frame}
-\frametitle{Results (2/4)}
-\includegraphics[height=6.9cm]{../../figs/eagle_render.jpg}
+\frametitle{Results}
+\includegraphics[height=6.5cm]{../../figs/eagle_render.jpg}
+
+Image from ESA/NASA\cite{esa-pillars}
 \end{frame}
 
 \begin{frame}
@@ -273,23 +276,21 @@
 \end{frame}
 
 \begin{frame}
-\frametitle{Comparing MPI and OMP (2/2)}
+\frametitle{MPI and OMP Results}
 \includegraphics[height=4.9cm]{../../figs/mpi_weak2.out.png}
-\includegraphics[height=4.9cm]{../../figs/omp_weak2.out.png}
+\includegraphics[height=4.9cm]{../../figs/mpi_strong_multinode.out.png}
 \end{frame}
 
-%TODO: Change the style from counters to bullet points
 \begin{frame}
-\frametitle{How does MPI scale across nodes}
-\centering
-\begin{enumerate}
-    \item{
-        This analysis shows how MPI scales as the number of nodes is increased under strong scaling.
-    }
-\end{enumerate}
-\includegraphics[height=6cm]{../../figs/mpi_strong_multinode.out.png}
+\frametitle{Source Code Access}
+Source code, data files, submission scripts and other relevant information is available in our open-source repo \url{https://github.com/liamnaddell/BHRaytracer}
 \end{frame}
 
+\begin{frame}
+%\bibliographystyle{ACM-Reference-Format}
+%\bibliography{../../refs}
+\printbibliography
+\end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \end{document}

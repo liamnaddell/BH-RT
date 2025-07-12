@@ -10,13 +10,11 @@ JUNK=.aux .bbl .blg .dvi .log .nav .out .ps .pdf .snm .tex.backup .tex.bak .toc 
 .PHONY: clean
 
 
-#$(TARGET): $(SOURCE) *tex refs.bib 
-$(TARGET): $(SOURCE) *tex
+$(TARGET): $(SOURCE) *tex ../../refs.bib 
+	@pdflatex $(SOURCE)
+	@biber $(NAME)
 	@pdflatex $(SOURCE)
 	@pdflatex $(SOURCE)
-#@bibtex $(NAME)
-#@pdflatex $(SOURCE)
-#@pdflatex $(SOURCE)
 
 
 distrib:
