@@ -287,6 +287,36 @@ Source code, data files, submission scripts and other relevant information is av
 \end{frame}
 
 \begin{frame}
+\frametitle{Conclusions}
+\begin{enumerate}
+    \item{
+        Raytracing is a powerful technique that allows us to create digital renders under black hole geometry.
+    }
+    \item{
+        This technique can be generalized to create renders when the path of a light ray is determined by an ODE.
+    }
+    \item{
+        Applying these kinds of distortions can result in expensive compute requirements, which supercomputers can help with.
+    }
+\end{enumerate}
+\end{frame}
+
+\begin{frame}
+\frametitle{Future Optimizations and Ideas}
+\begin{enumerate}
+    \item{
+        If creating a higher quality image, or especially for video, GPUs could be made use of to speed up computation.
+    }
+    \item{
+        We don't need to ray march every part of the image. When the ray is far from the black hole, we can get away with using regular ray tracing.
+    }
+    \item{
+        The raytracer used was quite basic. However, a more advanced ray tracer modified to support black hole geometry could generate much more stunning images.
+    }
+\end{enumerate}
+\end{frame}
+
+\begin{frame}
 %\bibliographystyle{ACM-Reference-Format}
 %\bibliography{../../refs}
 \printbibliography
