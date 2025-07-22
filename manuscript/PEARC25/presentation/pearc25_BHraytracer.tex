@@ -108,13 +108,6 @@
 
 \input{title}
 
-%\input{content}
-
-\begin{frame}
-\frametitle{Table of Contents}
-\tableofcontents
-\end{frame}
-
 \section{What are We Trying to Accomplish?}
 
 \begin{frame}
@@ -154,20 +147,6 @@
 \end{frame}
 
 \section{How We Can Use These Equations}
-\begin{frame}
-\frametitle{Raytracing}
-\begin{enumerate}
-    \item{
-        Since we have a way to trace the path of light rays around a given black hole, we can utilize Raytracing in order to render an image
-    }
-    \item{
-        Raytracers normally compute trajectories under the assumption that light takes a straight path, however, we will need to modify the Raytracer to account for the distortion of black hole geometry.
-    }
-    \item{
-        This technique is called Ray Marching
-    }
-\end{enumerate}
-\end{frame}
 
 \begin{frame}
 \frametitle{Raytracing}
@@ -186,6 +165,21 @@
 \end{enumerate}
 \includegraphics[scale=.10]{figs/raytrace.png}
 \cite{wikipedia_raytrace}
+\end{frame}
+
+\begin{frame}
+\frametitle{Raytracing}
+\begin{enumerate}
+    \item{
+        Since we have a way to trace the path of light rays around a given black hole, we can utilize Raytracing in order to render an image
+    }
+    \item{
+        Raytracers normally compute trajectories under the assumption that light takes a straight path, however, we will need to modify the Raytracer to account for the distortion of black hole geometry.
+    }
+    \item{
+        This technique is called Ray Marching
+    }
+\end{enumerate}
 \end{frame}
 
 
@@ -281,11 +275,6 @@ Image from ESA/NASA\cite{esa-pillars}
 \includegraphics[height=4.9cm]{../../figs/mpi_strong_multinode.out.png}
 \end{frame}
 
-\begin{frame}
-\frametitle{Source Code Access}
-Source code, data files, submission scripts and other relevant information is available in our open-source repo \url{https://github.com/liamnaddell/BHRaytracer}
-\end{frame}
-
 \section{Conclusions}
 
 \begin{frame}
@@ -295,10 +284,10 @@ Source code, data files, submission scripts and other relevant information is av
         Raytracing is a powerful technique that allows us to create digital renders under black hole geometry.
     }
     \item{
-        This technique can be generalized to create renders when the path of a light ray is determined by an ODE.
+        Applying these kinds of distortions can result in expensive compute requirements, which supercomputers can help with.
     }
     \item{
-        Applying these kinds of distortions can result in expensive compute requirements, which supercomputers can help with.
+        Additionally, the conventional wisdom is that OpenMP should be faster than MPI on a single node, however, that doesn't have to be the case in practice.
     }
 \end{enumerate}
 \end{frame}
@@ -310,12 +299,17 @@ Source code, data files, submission scripts and other relevant information is av
         If creating a higher quality image, or especially for video, GPUs could be made use of to speed up computation.
     }
     \item{
-        We don't need to ray march every part of the image. When the ray is far from the black hole, we can get away with using regular ray tracing.
+        We can also generalize this technique to other applications where the path of the light ray is determined by an ODE (e.g. Kerr metric)
     }
     \item{
-        The raytracer used was quite basic. However, a more advanced ray tracer modified to support black hole geometry could generate much more stunning images.
+        Lastly, this project was great as an educational tool, since it combines traditional HPC topic and Scientific Computing in a realistic application.
     }
 \end{enumerate}
+\end{frame}
+
+\begin{frame}
+\frametitle{Thanks!}
+Thank you all for being here!
 \end{frame}
 
 \begin{frame}
