@@ -1,5 +1,6 @@
 \documentclass[dvipsnames,aspectratio=169]{beamer}
 
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
@@ -39,7 +40,7 @@
 %\usecolortheme[metropolis]{owl}
 }
 
-\logo{\includegraphics[width=5cm]{figs/PEARC25_Logo_Tagline}}
+\logo{\includegraphics[width=2.5cm]{figs/PEARC25_Logo_Tagline}}
 
 \setbeamerfont{page number in head/foot}{size=\tiny}
 \setbeamercolor{footline}{fg=gray}
@@ -96,10 +97,10 @@
 %\usepackage{currfile}
 %\edef\CurrentFileDir{\currfiledir}
 \usepackage[abspath]{currfile}[2012/05/06]
-
+\usepackage[backend=biber,style=numeric-comp,sorting=none]{biblatex}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
+\addbibresource{../../refs.bib}
 \begin{document}
 
 
@@ -107,11 +108,216 @@
 
 \input{title}
 
-\input{content}
+\section{What are We Trying to Accomplish?}
+
+\begin{frame}
+\frametitle{What are we trying to accomplish?}
+\begin{enumerate}
+    \item{
+            We want to create digital renders of black holes
+    }
+    \item{
+            We know the equations that define black hole geometry
+    }
+    \item{
+            We might be able to utilize these equations to create scene renders under black hole geometry.
+    }
+\end{enumerate}
+\end{frame}
+
+\section{What Are the Equations?}
+
+\begin{frame}
+\frametitle{How to Black Holes Deform Light?}
+\begin{enumerate}
+    \item{
+            The Schwarzschild Metric tells us the paths light rays take in the orbit of a non-spinning neutrally charged black hole
+    }
+    \item{
+            Given M, the mass of the black hole,
+            we can simplify the Schwarzschild Metric to obtain $u^{\prime\prime}-u=3Mu^{2}$\cite{gravitation-mtw}. Where $u=\frac1{r}$, 
+             with $r$ being the distance between the light ray and the black hole origin,
+             and $u^\prime=\frac{du}{d\phi}$, 
+             where $\phi$ is the angle in spherical coordinates to the origin of the black hole.
+    }
+    \item{
+            This means that given some initial positional parameters, we are able to trace the path of a light ray as it orbits a black hole using GSL.
+    }
+\end{enumerate}
+\end{frame}
+
+\section{How We Can Use These Equations}
+
+\begin{frame}
+\frametitle{Raytracing}
+\begin{enumerate}
+    \item{
+        Raytracers create an image by tracing the path light rays take from
+        the aperature of a simulated camera, through the “image”
+    }
+    \item{
+        We use linear algebra to compute collision with various objects in the
+        scene.
+    }
+    \item{
+        With proper setup, this can let us create photorealistic images.
+    }
+\end{enumerate}
+\includegraphics[scale=.10]{figs/raytrace.png}
+\cite{wikipedia_raytrace}
+\end{frame}
+
+\begin{frame}
+\frametitle{Raytracing}
+\begin{enumerate}
+    \item{
+        Since we have a way to trace the path of light rays around a given black hole, we can utilize Raytracing in order to render an image
+    }
+    \item{
+        Raytracers normally compute trajectories under the assumption that light takes a straight path, however, we will need to modify the Raytracer to account for the distortion of black hole geometry.
+    }
+    \item{
+        This technique is called Ray Marching
+    }
+\end{enumerate}
+\end{frame}
 
 
+%\begin{frame}
+%\frametitle{Tracing a single ray of light}
+%\begin{enumerate}
+%    \item{
+%            The previous equations shown are 2-variable equations, since our black holes are independent of approach angle.
+%    }
+%    \item{
+%            We can reduce our 3-D system to 2-D by applying some rotations and transformations
+%    }
+%    \item{
+%            After doing this, we compute $u_{next}$ using an extrapolated trajectory, and use GSL to solve for $\phi_{next}$.
+%    }
+%    \item{
+%            After solving for u and $\phi$, we can undo our linear transformations to compute the points on our light ray in 3-D
+%    }
+%\end{enumerate}
+%\end{frame}
+
+%\begin{frame}
+%\frametitle{Tracing an image}
+%\begin{enumerate}
+%    \item{
+%        By finding a way to iterate through evenly spaced points on a light ray, we can apply our regular ray-tracing algorithms!
+%    }
+%    \item{
+%        We can cast a ray through each pixel in the viewplane, and trace the output trajectory from GSL!
+%    }
+%\end{enumerate}
+%\end{frame}
+
+\section{Results}
+
+\begin{frame}
+\frametitle{Results}
+\includegraphics[height=6.5cm]{../../figs/starry_render.jpg}
+
+Image from NASA SVS\cite{candels-nasa_svs}
+\end{frame}
+
+\begin{frame}
+\frametitle{Results}
+\includegraphics[height=6.5cm]{../../figs/eagle_render.jpg}
+
+Image from ESA/NASA\cite{esa-pillars}
+\end{frame}
+
+\begin{frame}
+\frametitle{Speed Challenges}
+\begin{enumerate}
+    \item{
+        Tracing a single ray can require ~2000 computed points for a low quality render (upwards of 40,000 for high quality renders)
+    }
+    \item{
+        A normal sized image can contain 2073600 pixels
+    }
+    \item{
+        Each pixel can require 10 computed rays for anti-aliasing
+    }
+    \item{
+        All of this can be extrordinarily expensive!!
+    }
+\end{enumerate}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{MPI+OpenMP}
+\begin{enumerate}
+    \item{
+        Each pixel can be rendered independently, which means we can break up this image any way we please. 
+    }
+    \item{
+        We break up the image horizontally, and send a different band to each process
+    }
+    \item{
+        Within each band, we can render each scanline on a single OpenMP thread.
+    }
+\end{enumerate}
+\end{frame}
+
+\begin{frame}
+\frametitle{Comparing MPI and OMP in Strong Scaling}
+\includegraphics[height=4.9cm]{../../figs/mpi_strong.out.png}
+\includegraphics[height=4.9cm]{../../figs/omp_strong.out.png}
+\end{frame}
+
+\begin{frame}
+\frametitle{MPI and OMP Results for Weak Scaling and MPI Multinode Results}
+\includegraphics[height=4.9cm]{../../figs/mpi_weak2.out.png}
+\includegraphics[height=4.9cm]{../../figs/mpi_strong_multinode.out.png}
+\end{frame}
+
+\section{Conclusions}
+
+\begin{frame}
+\frametitle{Conclusions}
+\begin{enumerate}
+    \item{
+        Raytracing is a powerful technique that allows us to create digital renders under black hole geometry.
+    }
+    \item{
+        Applying these kinds of distortions can result in expensive compute requirements, which supercomputers can help with.
+    }
+    \item{
+        Additionally, the conventional wisdom is that OpenMP should be faster than MPI on a single node, however, that doesn't have to be the case in practice.
+    }
+\end{enumerate}
+\end{frame}
+
+\begin{frame}
+\frametitle{Future Optimizations and Ideas}
+\begin{enumerate}
+    \item{
+        If creating a higher quality image, or especially for video, GPUs could be made use of to speed up computation.
+    }
+    \item{
+        We can also generalize this technique to other applications where the path of the light ray is determined by an ODE (e.g. Kerr metric)
+    }
+    \item{
+        Lastly, this project was great as an educational tool, since it combines traditional HPC topic and Scientific Computing in a realistic application.
+    }
+\end{enumerate}
+\end{frame}
+
+\begin{frame}
+\frametitle{Thanks!}
+Thank you all for being here!
+\end{frame}
+
+\begin{frame}
+%\bibliographystyle{ACM-Reference-Format}
+%\bibliography{../../refs}
+\printbibliography
+\end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 
 \end{document}
 

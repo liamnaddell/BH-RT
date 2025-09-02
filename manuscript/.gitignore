@@ -1,6 +1,12 @@
-manuscript_BHRT.aux
-manuscript_BHRT.bbl
-manuscript_BHRT.blg
-manuscript_BHRT.log
-manuscript_BHRT.out
+**/*.aux
+**/*.bbl
+**/*.blg
+**/*.log
+**/*.out
+**/*.bcf
+**/*.nav
+**/*.run.xml
+**/*.snm
+**/*.toc
 manuscript_BHRT.pdf
+pearc25_BHraytracer.pdf
